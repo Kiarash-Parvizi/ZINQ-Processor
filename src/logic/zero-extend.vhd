@@ -15,8 +15,11 @@ end entity;
 architecture structural of zero_extend is
     signal buff: std_logic_vector(dest_bit_count - 1 downto 0);
 begin
+    assert src_bit_count <= dest_bit_count report
+        "Source must not be greater than destination in size" severity error;
+
     l_validate_bit_counts:
-    if src_bit_count < dest_bit_count generate
+    if src_bit_count <= dest_bit_count generate
         buff(src_bit_count - 1 downto 0) <= n;
         buff(dest_bit_count - 1 downto src_bit_count) <= (others => '0');
     end generate;
