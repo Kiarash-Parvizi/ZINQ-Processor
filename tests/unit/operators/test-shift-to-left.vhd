@@ -7,8 +7,8 @@ end entity;
 architecture structural of test_shift_to_left is
     component shift_to_left is
         generic(
-            len: natural;
-            shift_amount: natural := 1
+            constant len: natural;
+            constant shift_amount: natural := 1
         );
         port(
             num: in std_logic_vector(len - 1 downto 0);

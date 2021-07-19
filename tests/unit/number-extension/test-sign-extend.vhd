@@ -7,8 +7,8 @@ end entity;
 architecture structural of test_sign_extend is
     component sign_extend is
         generic(
-            src_len: natural;
-            dest_len: natural
+            constant src_len: natural;
+            constant dest_len: natural
         );
         port(
             n: in std_logic_vector(src_len - 1 downto 0);

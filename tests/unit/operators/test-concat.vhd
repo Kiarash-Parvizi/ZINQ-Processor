@@ -7,8 +7,8 @@ end entity;
 architecture structural of test_concat is
     component concat is
         generic(
-            lhs_len: natural;
-            rhs_len: natural
+            constant lhs_len: natural;
+            constant rhs_len: natural
         );
         port(
             lhs: in std_logic_vector(lhs_len - 1 downto 0);

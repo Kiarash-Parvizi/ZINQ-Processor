@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 entity concat is
     generic(
         -- {R,L}HS: {Right,Left} Hand Side
-        lhs_len: natural;
-        rhs_len: natural
+        constant lhs_len: natural;
+        constant rhs_len: natural
     );
     port(
         lhs: in std_logic_vector(lhs_len - 1 downto 0);
