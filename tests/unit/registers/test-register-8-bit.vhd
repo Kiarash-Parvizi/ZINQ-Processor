@@ -8,7 +8,7 @@ end entity;
 architecture structural of test_register_8_bit is
     component register_n_bit is
         generic(
-            constant n: integer
+            constant n: natural
         );
         port(
             data: in std_logic_vector(n - 1 downto 0);
@@ -52,13 +52,11 @@ architecture structural of test_register_8_bit is
         7 ns, 9 ns, 31 ns, 32 ns, 42 ns, 44 ns, 49 ns, 52 ns, 83 ns, 85 ns, 96 ns, 98 ns
     );
 begin
-    uut: register_n_bit generic map(n) port map(in_data, clock, out_data, reset, enable);
+    instance: register_n_bit generic map(n) port map(in_data, clock, out_data, reset, enable);
     clock_generator_instance: clock_generator generic map(10, 5 ns) port map(clock);
 
-    enable_generator: switching_signal_generator generic map(enable_states)
-        port map(enable);
-    reset_generator: switching_signal_generator generic map(reset_states)
-        port map(reset);
+    enable_generator: switching_signal_generator generic map(enable_states) port map(enable);
+    reset_generator: switching_signal_generator generic map(reset_states) port map(reset);
 
     in_data <= x"31",
         x"54" after 14 ns,
@@ -72,5 +70,4 @@ begin
         x"ee" after 83 ns,
         x"e2" after 94 ns,
         x"c4" after 100 ns;
-
 end architecture;

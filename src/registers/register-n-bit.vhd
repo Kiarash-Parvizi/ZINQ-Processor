@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity register_n_bit is
     generic(
-        constant n: integer
+        constant n: natural
     );
     port(
         data: in std_logic_vector(n - 1 downto 0);
