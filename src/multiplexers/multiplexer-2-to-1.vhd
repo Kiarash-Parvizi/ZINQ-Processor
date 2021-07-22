@@ -4,17 +4,17 @@ use work.types.std_logic_vector_array;
 
 entity multiplexer_2_to_1 is
     generic(
-        constant bit_len: natural
+        constant inout_len: natural
     );
     port(
-        inputs: in std_logic_vector_array(2 - 1 downto 0)(bit_len - 1 downto 0);
+        inputs: in std_logic_vector_array(2 - 1 downto 0)(inout_len - 1 downto 0);
         selector: in std_logic;
-        result: out std_logic_vector(bit_len - 1 downto 0)
+        result: out std_logic_vector(inout_len - 1 downto 0)
     );
 end entity;
 
 architecture structural of multiplexer_2_to_1 is
-    signal selector_extended: std_logic_vector(bit_len - 1 downto 0) := (others => selector);
+    signal selector_extended: std_logic_vector(inout_len - 1 downto 0) := (others => selector);
 begin
     result <=
         (inputs(0) and not selector_extended) or
