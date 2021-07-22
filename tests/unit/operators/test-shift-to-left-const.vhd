@@ -1,11 +1,11 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity test_shift_to_left is
+entity test_shift_to_left_const is
 end entity;
 
-architecture structural of test_shift_to_left is
-    component shift_to_left is
+architecture structural of test_shift_to_left_const is
+    component shift_to_left_const is
         generic(
             constant len: natural;
             constant shift_amount: natural := 1
@@ -24,9 +24,9 @@ architecture structural of test_shift_to_left is
 begin
     val <= b"1111";
 
-    instance_1: shift_to_left generic map(len, 1) port map(val, result_1);
-    instance_2: shift_to_left generic map(len, 2) port map(val, result_2);
-    instance_4: shift_to_left generic map(len, 4) port map(val, result_4);
+    instance_1: shift_to_left_const generic map(len, 1) port map(val, result_1);
+    instance_2: shift_to_left_const generic map(len, 2) port map(val, result_2);
+    instance_4: shift_to_left_const generic map(len, 4) port map(val, result_4);
 
     dummy <= '0' after 10 ns;
 end architecture;

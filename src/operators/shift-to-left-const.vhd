@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity shift_to_left is
+entity shift_to_left_const is
     generic(
         constant len: natural;
         constant shift_amount: natural := 1
@@ -12,7 +12,7 @@ entity shift_to_left is
     );
 end entity;
 
-architecture structural of shift_to_left is
+architecture structural of shift_to_left_const is
 begin
     -- Make right-most bits zero
     result(shift_amount - 1 downto 0) <= (others => '0');
