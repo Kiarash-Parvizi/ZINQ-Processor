@@ -1,72 +1,97 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.math_real.all;
-use work.types.std_logic_vector_array, work.types.std_logic_vector_2d_array;
 
 entity multiplexer_n_to_1 is
     generic(
         constant inout_len: natural;
-        constant inputs_count: natural;
-        constant selector_len: natural := natural(ceil(log2(real(inputs_count))))
+        constant inputs_count: natural
     );
     port(
-        inputs: in std_logic_vector_array(inputs_count - 1 downto 0)(inout_len - 1 downto 0);
-        selector: in std_logic_vector(selector_len - 1 downto 0);
+        inputs_concat: in std_logic_vector(inputs_count * inout_len - 1 downto 0);
+        -- If the multiplexer is n-bit, and n = 2^m, this long expression is m
+        selector: in std_logic_vector(natural(ceil(log2(real(inputs_count)))) - 1 downto 0);
         result: out std_logic_vector(inout_len - 1 downto 0)
     );
 end entity;
 
+-- General description about what the implementation does.
+--
+-- Split the current multiplexer into a set of layers 2x1 multiplexers, available in multiple
+-- layers. Each layer reduces one selection, and merges two inputs into one output. Thus, if the
+-- multiplexer has n inputs (supposing n is a power of 2), it has exactly log2(n) layers in it.
+-- Also, we have exactly n - 1 multiplexers in all layers.
+--
+-- It may seem obvious, but the multiplexers count in each layer differ, and each layer has two
+-- times more multiplexers than the previous one. Also, starting from the biggest layer (i.e. the
+-- closest to the inputs), the selector bit is less significant than the smaller ones.
+--
+-- This is how we index things: We index the layers and multiplexers from the biggest one (i.e.
+-- with most number of 2x1 multiplexers). It does not make much sense to know how multiplexers are
+-- indexed within a layer, but suppose the index starts from the upmost multiplexer downwards.
+--
+-- Note that, as our multiplexer accepts n if it is not a power of 2, so we round that up to the
+-- first number meeting the condition. Saying so, some inputs remain uninitialized, and if the
+-- selector chooses one these inputs, either intensionally or by accident, the results will be
+-- useless.
 architecture structural of multiplexer_n_to_1 is
     component multiplexer_2_to_1 is
         generic(
             constant inout_len: natural
         );
         port(
-            inputs: in std_logic_vector_array(2 - 1 downto 0)(inout_len - 1 downto 0);
+            inputs_concat: in std_logic_vector(2 * inout_len - 1 downto 0);
             selector: in std_logic;
             result: out std_logic_vector(inout_len - 1 downto 0)
         );
     end component;
 
-    -- n must be a power of 2
+    constant selector_len: natural := natural(ceil(log2(real(inputs_count))));
     constant n: natural := 2 ** selector_len;
 
-    -- The inputs to give to each layer of multiplexers (refer to the comment below).
+    -- To handle layer interconnections, we must define some connections (i.e. singals).
     --
-    -- To prevent overcomplicating things, we define the maximum inputs needed for all layers,
-    -- which belongs to first layer (i.e. that equals to n), for all other layers as well. As a
-    -- result, some inputs defined here might remain unused (i.e. uninitialized). The ones that are
-    -- used in the implementation is the first-most ones.
+    -- First, inputs of each layer is the outputs of the previous one.
     --
-    -- Also, as the inputs of the current layer are the outputs of the previous one, for n = 8 for
-    -- example, we have to consider 4 layers instead of 3; as the last output is the output of the
-    -- entity and must be stored.
-    signal layer_inputs: std_logic_vector_2d_array
-        (selector_len + 1 - 1 downto 0, n - 1 downto 0)(inout_len - 1 downto 0);
+    -- For an n to 1 multiplexer, in the current implementation, considering all distinct
+    -- connections (including the ones from the outside, i.e. inputs and outputs of the component),
+    -- we must have exactly 2n - 1 of these connections.
+    --
+    -- We index each connection based on the multiplexer it is the input of. If you suppose a
+    -- multiplexer with index k, then its first input connection (i.e. being selected when the
+    -- selector is '0') is 2k, and the second one is 2k + 1. In other words, if a connection is
+    -- the output of a multiplexer with index k, then its index is k + n. Keep in mind, indexes
+    -- start from zero.
+    --
+    -- Each connection has a specific length, aka inout_len, so we must take it into consideration.
+    --
+    -- For keeping consistensy with the inputs, the connections with less index has a lefter-most
+    -- position. For instance, the left-most bits (with the count of inout_len) constructs the
+    -- connection number 0. Also, to avoid complexity of the code, we use forward keys instead
+    -- (i.e. using to instead of downto).
+    signal connections: std_logic_vector(0 to (2*n - 1) * (inout_len) - 1);
 begin
-    -- After this loop, some inputs for the first layer should remain unintialized, as we suppose
-    -- there is no need to them; because, otherwise the inputs count must differ.
-    l_initialize_first_layer_inputs:
-    for input_num in inputs_count - 1 downto 0 generate
-        layer_inputs(0, input_num) <= inputs(input_num);
-    end generate;
+    -- Initialize the inputs of the layer number 0
+    connections(0 to inputs_count * inout_len - 1) <= inputs_concat;
 
-    -- Split the multiplexer into multiple layers consisting of some 2x1 multiplexers, and then
-    -- merge them until making the final result. Obviously, each layer has twice multiplexers as
-    -- the previous one.
+    -- Layer number is needed for selecting selector bit
     l_iterate_layers:
     for layer_num in 0 to selector_len - 1 generate
-        constant mux_count: natural := 2 ** ((selector_len - 1) - layer_num);
+        -- How calculated? Have a good time. :)
+        constant mux_min_index: natural := n - (2 ** (selector_len - layer_num));
+        constant mux_max_index: natural := n - (2 ** (selector_len - 1 - layer_num) + 1);
     begin
-        l_generate_current_layer:
-        for mux_num in 0 to mux_count - 1 generate
+        l_generate_2x1_multiplexers:
+        for mux_num in mux_min_index to mux_max_index generate
             mux_2x1: multiplexer_2_to_1 generic map(inout_len) port map(
-                (layer_inputs(layer_num, 2 * mux_num), layer_inputs(layer_num, 2 * mux_num + 1)),
+                -- Remember 2k and 2k + 1? Just add an inout_len into it!
+                connections(2 * mux_num * inout_len to (2 * mux_num + 2) * inout_len - 1),
                 selector(layer_num),
-                layer_inputs(layer_num + 1, mux_num)
+                -- Remember k + n?
+                connections((mux_num + n) * inout_len to (mux_num + n + 1) * inout_len - 1)
             );
         end generate;
     end generate;
 
-    result <= layer_inputs(selector_len, 0);
+    result <= connections((2*n - 2) * inout_len to (2*n - 1) * inout_len - 1);
 end architecture;
