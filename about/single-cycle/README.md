@@ -7,5 +7,5 @@ A datapath is a collection of functional units such as arithmetic logic units or
 A controller, in a computing context, is a hardware device or a software program that manages or directs the flow of data
 
 ## exe_state_calc:
-we_<\*> == false if RST
+we_<\*> == false if RST <br/>
 RST = !ExeState + rst
