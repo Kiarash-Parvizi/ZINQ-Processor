@@ -35,8 +35,8 @@ architecture structural of test_controller is
     end component;
     signal clk : std_logic := '0';
     -- input signals
-    signal opc : std_logic_vector(2 downto 0);
-    signal func: std_logic_vector(1 downto 0);
+    signal opc : std_logic_vector(2 downto 0) := "000";
+    signal func: std_logic_vector(1 downto 0) := "00";
     signal q, Reset: std_logic;
     signal alu_zero: std_logic;
     signal alu_borrow: std_logic;
@@ -56,13 +56,14 @@ architecture structural of test_controller is
     signal sel_mem_addr: std_logic;
     signal sel_bank_wr : std_logic;
     signal sel_mrf_wd  : std_logic_vector(2 downto 0);
-    signal sel_mrf_wr  : std_logic_vector(1 downto 0)
+    signal sel_mrf_wr  : std_logic_vector(1 downto 0);
 begin
     instance: controller port map(
+    clk,
     opc,
-    func
+    func,
     q, Reset,
-    alu_zero
+    alu_zero,
     alu_borrow,
     -- output signals
     rst,
@@ -83,7 +84,104 @@ begin
     sel_mrf_wr  
     );
     process is begin
-        -- TODO
+        ---
+        clk <= '0';
+        opc <= "000"; func <= "00";
+        q <= '0'; Reset <= '1';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "000"; func <= "00";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "001"; func <= "00";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "010"; func <= "00";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "011"; func <= "00";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "111"; func <= "01";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "111"; func <= "01";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '1';
+        alu_borrow <= '0';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "111"; func <= "10";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "100"; func <= "10";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "110"; func <= "10";
+        q <= '0'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
+        wait for 10 ns;
+        ---
+        clk <= '0';
+        opc <= "110"; func <= "10";
+        q <= '1'; Reset <= '0';
+        alu_zero <= '0';
+        alu_borrow <= '1';
+        wait for 10 ns;
+        clk <= '1';
         wait for 10 ns;
         wait;
     end process;
