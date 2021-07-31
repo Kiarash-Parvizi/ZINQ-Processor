@@ -32,36 +32,66 @@ end entity;
 
 -- all based on about/exe_state_calc.jpg
 architecture structural of controller is
-    signal a : std_logic := opc(2);
-    signal b : std_logic := opc(1);
-    signal c : std_logic := opc(0);
-    signal F1: std_logic := func(1);
-    signal F2: std_logic := func(0);
+    signal a : std_logic;
+    signal b : std_logic;
+    signal c : std_logic;
+    signal F1: std_logic;
+    signal F2: std_logic;
     -- flip-flop
     signal reset_state: std_logic := '1';
     -- table
     -- opc based
-    signal notRst : std_logic := not (Reset or reset_state);
-    signal O_000: std_logic := (not a and not b and not c);
-    signal O_001: std_logic := (not a and not b and c);
-    signal O_0d0: std_logic := (not a and not c);
-    signal O_100: std_logic := (a and not b and not c);
-    signal O_10d: std_logic := (a and not b);
-    signal O_110: std_logic := (a and b and not c);
-    signal O_111: std_logic := (a and b and c);
-    signal O_11d: std_logic := (a and b);
-    signal O_1d0: std_logic := (a and not c);
-    signal O_1d1: std_logic := (a and c);
-    signal O_d11: std_logic := (b and c);
-    signal N_1d1: std_logic := not O_1d1;
+    signal notRst : std_logic;
+    signal O_000: std_logic;
+    signal O_001: std_logic;
+    signal O_0d0: std_logic;
+    signal O_100: std_logic;
+    signal O_10d: std_logic;
+    signal O_110: std_logic;
+    signal O_111: std_logic;
+    signal O_11d: std_logic;
+    signal O_1d0: std_logic;
+    signal O_1d1: std_logic;
+    signal O_d11: std_logic;
+    signal N_1d1: std_logic;
     -- opc & func based
-    signal O_111_F_1d: std_logic := O_111 and F1;
-    signal O_111_F_d1: std_logic := O_111 and F2;
-    signal O_1d1_F_1d: std_logic := O_1d1 and F1;
-    signal O_1d1_F_d1: std_logic := O_1d1 and F2;
+    signal O_111_F_1d: std_logic;
+    signal O_111_F_d1: std_logic;
+    signal O_1d1_F_1d: std_logic;
+    signal O_1d1_F_d1: std_logic;
     -- custom
     --signal sel_pc_v0 : std_logic := not(O_110 or (O_111 and (F1 or F2)));
 begin
+    -- bind table
+    a  <= opc(2);
+    b  <= opc(1);
+    c  <= opc(0);
+    F1 <= func(1);
+    F2 <= func(0);
+    -- flip-flop
+    -- table
+    -- opc based
+    notRst <= not (Reset or reset_state);
+    O_000 <= (not a and not b and not c);
+    O_001 <= (not a and not b and c);
+    O_0d0 <= (not a and not c);
+    O_100 <= (a and not b and not c);
+    O_10d <= (a and not b);
+    O_110 <= (a and b and not c);
+    O_111 <= (a and b and c);
+    O_11d <= (a and b);
+    O_1d0 <= (a and not c);
+    O_1d1 <= (a and c);
+    O_d11 <= (b and c);
+    N_1d1 <= not O_1d1;
+    -- opc & func based
+    O_111_F_1d <= O_111 and F1;
+    O_111_F_d1 <= O_111 and F2;
+    O_1d1_F_1d <= O_1d1 and F1;
+    O_1d1_F_d1 <= O_1d1 and F2;
+    -- custom
+    ------------------------
+    ------------------------
     rst <= Reset;
     -- we
     we_mrf  <= notRst and ((not a) or O_1d0);
