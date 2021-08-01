@@ -33,11 +33,11 @@ scripts/start-unit-test.php <test-entity-name> [<workdir>] [<simulation-options>
 Q | 110 | - | beon Rd, Rs, Rt, Shamt | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[15:8] & Rt[7:0]<br/>&nbsp;&nbsp;PC ← PC + ((Rs × 64) + (4 ^ Shamt))<br/>Else<br/>&nbsp;&nbsp;Rd ← NOT(Rs) <br/>&nbsp;&nbsp;PC ← (PC << Shamt) |
 
 ## instruction-format
-![](about/single-cycle/instruction-format.jpg)
+![instruction-format](about/single-cycle/instruction-format.jpg)
 
 ## data-path:
-![](about/single-cycle/datapath.jpg)
+![datapath](about/single-cycle/datapath.jpg)
 
 ## controller:
-[//]: # "![](about/single-cycle/controller.jpg)"
+![controller](about/single-cycle/controller.jpg)
 
