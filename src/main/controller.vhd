@@ -44,6 +44,7 @@ architecture structural of controller is
     signal notRst : std_logic;
     signal O_000: std_logic;
     signal O_001: std_logic;
+    signal O_01d: std_logic;
     signal O_0d0: std_logic;
     signal O_100: std_logic;
     signal O_10d: std_logic;
@@ -74,6 +75,7 @@ begin
     notRst <= not (Reset or reset_state);
     O_000 <= (not a and not b and not c);
     O_001 <= (not a and not b and c);
+    O_01d <= (not a and b);
     O_0d0 <= (not a and not c);
     O_100 <= (a and not b and not c);
     O_10d <= (a and not b);
@@ -127,7 +129,7 @@ begin
     sel_mrf_wd(0) <= O_0d0 or O_10d; -- 1 3
     -- sel_mrf_wr
     sel_mrf_wr(1) <= a;
-    sel_mrf_wr(0) <= b;
+    sel_mrf_wr(0) <= O_01d;
     -------------------
     -- flip flop
     process(clk) begin
