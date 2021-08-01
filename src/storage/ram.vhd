@@ -15,7 +15,7 @@ end entity;
 
 architecture structural of ram is
     type ram_type is array (0 to (2**address'length)-1) of std_logic_vector(datain'range);
-    signal ramBuf : ram_type;
+    signal ramBuf : ram_type := (others => (others => '0'));
 begin
     RamProc: process(clock) is
     begin
