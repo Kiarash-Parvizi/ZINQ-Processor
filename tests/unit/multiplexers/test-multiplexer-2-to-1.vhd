@@ -24,7 +24,7 @@ architecture structural of test_multiplexer_2_to_1 is
 begin
     -- Using two writing formats to indicate both are possible and error-free
     instance_selector_0: multiplexer_2_to_1 generic map(inout_len) port map(
-        (b"1100", b"0001"), '0', result_0
+        b"1100" & b"0001", '0', result_0
     );
     instance_selector_1: multiplexer_2_to_1 generic map(inout_len) port map(
         b"0010" & b"0011", '1', result_1
