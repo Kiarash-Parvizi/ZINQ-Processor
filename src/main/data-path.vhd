@@ -359,11 +359,11 @@ begin
         open
     );
 
-    adder_beon_q_eq_1: full_adder_n_bit generic map(n) port map(
-        adder_beon_q_eq_1_lhs,
-        adder_beon_q_eq_1_rhs,
+    adder_beon: full_adder_n_bit generic map(n) port map(
+        adder_beon_lhs,
+        adder_beon_rhs,
         '0',
-        adder_beon_q_eq_1_out,
+        adder_beon_out,
         open
     );
 
@@ -403,5 +403,36 @@ begin
 
     ze_jalv: zero_extend generic map(9, n) port map(
         ze_jalv_in, ze_jalv_out
+    );
+
+    -- LShift: Left Shift
+    lshift_stoi: shift_to_left_const generic map(n, 4) port map(
+        lshift_stoi_in, lshift_stoi_out
+    );
+
+    lshift_ltor: shift_to_left generic map(n, n) port map(
+        lshift_ltor_in, lshift_ltor_amount, lshift_ltor_out
+    );
+
+    lshift_luis: shift_to_left generic map(n, n) port map(
+        lshift_luis_in, lshift_luis_amount, lshift_luis_out
+    );
+
+    lshift_jalv: shift_to_left_const generic map(n, 1) port map(
+        lshift_jalv_in, lshift_jalv_out
+    );
+
+    lshift_subs: shift_to_left generic map(n, 3) port map(
+        lshift_subs_in, lshift_subs_amount, lshift_subs_out
+    );
+
+    -- eq: Equals
+    -- ne: Not Equals
+    lshift_beon_q_eq_1: shift_to_left_const generic map(n, 6) port map(
+        lshift_beon_q_eq_1_in, lshift_beon_q_eq_1_out
+    );
+
+    lshift_beon_q_ne_1: shift_to_left generic map(n, 3) port map(
+        lshift_beon_q_ne_1_in, lshift_beon_q_ne_1_amount, lshift_beon_q_ne_1_out
     );
 end architecture;
