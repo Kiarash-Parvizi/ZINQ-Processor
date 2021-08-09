@@ -374,4 +374,34 @@ begin
         adder_stoi_value_out,
         open
     );
+
+    -- SE: Sign Extend
+    -- ZE: Zero Extend
+    se_stoi: sign_extend generic map(4, n) port map(
+        se_stoi_in, se_stoi_out
+    );
+
+    se_ltor: sign_extend generic map(7, n) port map(
+        se_ltor_in, se_ltor_out
+    );
+
+    se_luis: sign_extend generic map(7, n) port map(
+        se_luis_in, se_luis_out
+    );
+
+    se_bgti_immh: sign_extend generic map(5, n) port map(
+        se_bgti_immh_in, se_bgti_immh_out
+    );
+
+    se_bgti_imml: sign_extend generic map(4, n) port map(
+        se_bgti_imml_in, se_bgti_imml_out
+    );
+
+    ze_stoi: zero_extend generic map(4, n) port map(
+        ze_stoi_in, ze_stoi_out
+    );
+
+    ze_jalv: zero_extend generic map(9, n) port map(
+        ze_jalv_in, ze_jalv_out
+    );
 end architecture;
