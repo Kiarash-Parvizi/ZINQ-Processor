@@ -291,7 +291,7 @@ begin
         bank_out
     );
 
-    alu: alu generic map(n) port map(
+    alu_instance: alu generic map(n) port map(
         mux_alu_lhs_out, mux_alu_rhs_out, alu_op, alu_out, alu_zero, alu_borrow
     );
 
