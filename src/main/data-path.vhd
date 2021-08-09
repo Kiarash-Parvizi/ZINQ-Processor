@@ -203,6 +203,19 @@ architecture structural of data_path is
             out0: out std_logic_vector((2**addr_size)-1 downto 0)
         );
     end component;
+
+    component full_adder_n_bit is
+        generic(
+            constant n: natural
+        );
+        port(
+            a, b: in std_logic_vector(n - 1 downto 0);
+            cin: in std_logic := '0';
+
+            sum: out std_logic_vector(n - 1 downto 0);
+            cout: out std_logic
+        );
+    end component;
     ----------------------
     constant n: natural := 16;
     -------- signals:
@@ -336,5 +349,29 @@ begin
 
     mux_mem_addr: multiplexer_2_to_1 generic map(n) port map(
         mux_mem_addr_in, sel_mem_addr, mux_mem_addr_out
+    );
+
+    adder_pc_plus_2: full_adder_n_bit generic map(n) port map(
+        adder_pc_plus_2_lhs,
+        adder_pc_plus_2_rhs,
+        '0',
+        adder_pc_plus_2_out,
+        open
+    );
+
+    adder_beon_q_eq_1: full_adder_n_bit generic map(n) port map(
+        adder_beon_q_eq_1_lhs,
+        adder_beon_q_eq_1_rhs,
+        '0',
+        adder_beon_q_eq_1_out,
+        open
+    );
+
+    adder_stoi_value: full_adder_n_bit generic map(n) port map(
+        adder_stoi_value_lhs,
+        adder_stoi_value_rhs,
+        '0',
+        adder_stoi_value_out,
+        open
     );
 end architecture;
