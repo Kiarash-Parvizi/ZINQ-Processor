@@ -28,7 +28,7 @@ architecture structural of data_path is
             clk : in std_logic := '0';
             -- input signals
             opc : in std_logic_vector(2 downto 0);
-            func: in std_logic_vector(1 downto 0);
+            funct: in std_logic_vector(1 downto 0);
             q, Reset: in std_logic;
             alu_zero: in std_logic;
             alu_borrow: in std_logic;
@@ -209,7 +209,7 @@ architecture structural of data_path is
     ---- Controller:
     -- input signals
     signal opc : std_logic_vector(2 downto 0);
-    signal func: std_logic_vector(1 downto 0);
+    signal funct: std_logic_vector(1 downto 0);
     signal q, Reset: std_logic;
     signal alu_zero: std_logic;
     signal alu_borrow: std_logic;
@@ -244,14 +244,8 @@ architecture structural of data_path is
     signal mrf_out: std_logic_vector(n - 1 downto 0) := (others => '0');
     signal mux_rd_cmpi_out: std_logic_vector(n-1 downto 0) := (others => '0');
 begin
-    -- Controller inputs
-    opc  <= inst(8 downto 6);
-    func <= inst(1 downto 0);
-    q    <= inst(12);
-    Reset<= '0';
-
     main_controller: controller port map(
-        clk, opc, func, q, Reset, alu_zero, alu_borrow,
+        clk, opc, funct, q, rst, alu_zero, alu_borrow,
         -- output signals
         rst,we_mrf,we_bank,we_mem ,sel_pc,sel_alu_lhs,sel_alu_rhs,
         alu_op,sel_pc_bgti,sel_rd_cmpi,sel_pc_beon,sel_rd_beon,
@@ -263,10 +257,43 @@ begin
         pc_in, clk, pc_out, rst, '1'
     );
 
-    ---- instruction_memory
-    instruction_memory: rom
-        port map (pc_out(7 downto 0), inst);
-    ---- Bank RF
+    instruction_memory: rom port map(
+        pc_out(7 downto 0), inst
+    );
+
+    -- Controller inputs
+    opc <= inst(8 downto 6);
+    funct <= inst(1 downto 0);
+    q <= inst(12);
+
+    main_register_file: register_file_3 generic map(3) port map(
+        clk, rst, we_mrf,
+        inst(15 downto 13),
+        inst(5 downto 3),
+        inst(2 downto 0),
+        mux_mrf_wr_out,
+        mux_mrf_wd_out,
+        mrf_out_1,
+        mrf_out_2,
+        mrf_out_3
+    );
+
+    bank_register_file: register_file_1 generic map(2) port map(
+        clk, rst, we_bank,
+        inst(10 downto 9),
+        mux_bank_wr_out,
+        pc_plus_2_out,
+        bank_out
+    );
+
+    alu: alu generic map(n) port map(
+        mux_alu_lhs_out, mux_alu_rhs_out, alu_op, alu_out, alu_zero, alu_borrow
+    );
+
+    memory_unit: ram port map(
+        clk, we_mem, mux_mem_addr_out, mem_in, mem_out
+    );
+
     -- mux_bank_wr
     mux_bank_wr: multiplexer_2_to_1 generic map(2)
         port map(
@@ -275,14 +302,6 @@ begin
             mux_bank_wr_out
         );
     -- bank_rf
-    bank_rf: register_file_1 generic map(2)
-        port map(
-            clk, rst, we_bank,
-            std_logic_vector(inst(10 downto 9)), mux_bank_wr_out,
-            wd, -- wd todo
-            -- output
-            bank_out
-        );
     ---- main RF
     -- mux_mrf_wr
     mux_mrf_wr: multiplexer_n_to_3 generic map(3, 3)
@@ -306,16 +325,5 @@ begin
     --        mux_mrf_wd_out
     --    );
     -- main_register_file
-    main_register_file: register_file_3 generic map(3)
-        port map(
-            clk, rst, we_mrf,
-            inst(15 downto 13),
-            inst(5 downto 3),
-            inst(2 downto 0),
-            mux_mrf_wr_out,
-            wd, -- wd todo
-            -- output
-            bank_out
-        );
 
 end architecture;
