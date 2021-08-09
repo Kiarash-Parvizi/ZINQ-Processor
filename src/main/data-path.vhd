@@ -435,4 +435,32 @@ begin
     lshift_beon_q_ne_1: shift_to_left generic map(n, 3) port map(
         lshift_beon_q_ne_1_in, lshift_beon_q_ne_1_amount, lshift_beon_q_ne_1_out
     );
+
+    pow_base_4_ltor: pow_base_4 generic map(n, 3) port map(
+        pow_base_4_ltor_exponent, pow_base_4_ltor_out
+    );
+
+    pow_base_4_beon: pow_base_4 generic map(n, 3) port map(
+        pow_base_4_beon_exponent, pow_base_4_beon_out
+    );
+
+    concat_ltor: concat generic map(7, 4) port map(
+        concat_ltor_lhs, concat_ltor_rhs, concat_ltor_out
+    );
+
+    concat_luis: concat generic map(8, 8) port map(
+        concat_luis_lhs, concat_luis_rhs, concat_luis_out
+    );
+
+    concat_bgti: concat generic map(4, 12) port map(
+        concat_bgti_lhs, concat_bgti_rhs, concat_bgti_out
+    );
+
+    concat_jalv: concat generic map(5, 4) port map(
+        concat_jalv_lhs, concat_jalv_rhs, concat_jalv_out
+    );
+
+    concat_beon: concat generic map(8, 8) port map(
+        concat_beon_lhs, concat_beon_rhs, concat_beon_out
+    );
 end architecture;
