@@ -244,21 +244,12 @@ architecture structural of data_path is
     signal mrf_out: std_logic_vector(n - 1 downto 0) := (others => '0');
     signal mux_rd_cmpi_out: std_logic_vector(n-1 downto 0) := (others => '0');
 begin
-    ---- pc
-    process(clk, rst) begin
-        if (rst='1') then
-            pc_out <= (others => '0');
-        elsif(clk'event and clk='1') then
-            pc_out <= pc_in;
-        end if;
-    end process;
-    ---- controller
-    --
+    -- Controller inputs
     opc  <= inst(8 downto 6);
     func <= inst(1 downto 0);
     q    <= inst(12);
     Reset<= '0';
-    --
+
     main_controller: controller port map(
         clk, opc, func, q, Reset, alu_zero, alu_borrow,
         -- output signals
@@ -266,6 +257,12 @@ begin
         alu_op,sel_pc_bgti,sel_rd_cmpi,sel_pc_beon,sel_rd_beon,
         sel_mem_addr,sel_bank_wr,sel_mrf_wd,sel_mrf_wr
     );
+
+    -- Program Counter
+    pc: register_n_bit generic map(n) port map(
+        pc_in, clk, pc_out, rst, '1'
+    );
+
     ---- instruction_memory
     instruction_memory: rom
         port map (pc_out(7 downto 0), inst);
