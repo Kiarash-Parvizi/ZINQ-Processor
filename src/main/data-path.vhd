@@ -294,36 +294,47 @@ begin
         clk, we_mem, mux_mem_addr_out, mem_in, mem_out
     );
 
-    -- mux_bank_wr
-    mux_bank_wr: multiplexer_2_to_1 generic map(2)
-        port map(
-            inst(10 downto 9) & "11",
-            sel_bank_wr,
-            mux_bank_wr_out
-        );
-    -- bank_rf
-    ---- main RF
-    -- mux_mrf_wr
-    mux_mrf_wr: multiplexer_n_to_3 generic map(3, 3)
-        port map (
-            inst(15 downto 13) & inst(2 downto 0) & inst(11 downto 9),
-            sel_mrf_wr,
-            mux_mrf_wr_out
-        );
-    -- mux_rd_cmpi
-    mux_rd_cmpi: multiplexer_2_to_1 generic map(16)
-        port map(
-            x"ffff" & x"0000",
-            sel_rd_cmpi,
-            mux_rd_cmpi_out
-        );
-    -- mux_mrf_wd
-    --mux_mrf_wd: multiplexer_n_to_3 generic map(16, 5)
-    --    port map (
-    --        mux_rd_cmpi_out -- todo & inst(2 downto 0) & inst(11 downto 9),
-    --        sel_mrf_wd,
-    --        mux_mrf_wd_out
-    --    );
-    -- main_register_file
+    mux_pc: multiplexer_n_to_1 generic map(n, 4) port map(
+        mux_pc_in, sel_pc, mux_pc_out
+    );
 
+    mux_pc_beon: multiplexer_n_to_1 generic map(n, 2) port map(
+        mux_pc_beon_in, sel_pc_beon, mux_pc_beon_out
+    );
+
+    mux_pc_bgti: multiplexer_n_to_1 generic map(n, 2) port map(
+        mux_pc_bgti_in, sel_pc_bgti, mux_pc_bgti_out
+    );
+
+    mux_mrf_wr: multiplexer_n_to_1 generic map(3, 3) port map(
+        mux_mrf_wr_in, sel_mrf_wr, mux_mrf_wr_out
+    );
+
+    mux_mrf_wd: multiplexer_n_to_1 generic map(16, 5) port map(
+        mux_mrf_wd_in, sel_mrf_wd, mux_mrf_wd_out
+    );
+
+    mux_rd_cmpi: multiplexer_2_to_1 generic map(16) port map(
+        mux_rd_cmpi_in, sel_rd_cmpi, mux_rd_cmpi_out
+    );
+
+    mux_rd_beon: multiplexer_2_to_1 generic map(16) port map(
+        mux_rd_beon_in, sel_rd_beon, mux_rd_beon_out
+    );
+
+    mux_bank_wr: multiplexer_2_to_1 generic map(2) port map(
+        mux_bank_wr_in, sel_bank_wr, mux_bank_wr_out
+    );
+
+    mux_alu_lhs: multiplexer_n_to_1 generic map(n, 6) port map(
+        mux_alu_lhs_in, sel_alu_lhs, mux_alu_lhs_out
+    );
+
+    mux_alu_rhs: multiplexer_n_to_1 generic map(n, 4) port map(
+        mux_alu_rhs_in, sel_alu_rhs, mux_alu_rhs_out
+    );
+
+    mux_mem_addr: multiplexer_2_to_1 generic map(n) port map(
+        mux_mem_addr_in, sel_mem_addr, mux_mem_addr_out
+    );
 end architecture;
