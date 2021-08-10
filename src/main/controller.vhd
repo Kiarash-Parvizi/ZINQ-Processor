@@ -105,7 +105,7 @@ begin
     -- sel_alu_lhs
     sel_alu_lhs(2) <= (O_000) or (O_1d1_F_1d); -- 4 5
     sel_alu_lhs(1) <= (N_1d1 and b) or (N_1d1 and O_10d); -- 2 3
-    sel_alu_lhs(0) <= 
+    sel_alu_lhs(0) <=
         (N_1d1 and c) or (N_1d1 and O_10d) or (O_1d1_F_1d); -- 1 3 5
     -- sel_alu_rhs
     sel_alu_rhs(1) <= (N_1d1 and b) or (O_1d1_F_1d); -- pre 2 5

@@ -13,22 +13,22 @@ entity data_path is
         we_mem: in std_logic;
 
         sel_pc: in std_logic_vector(1 downto 0);
-        sel_pc_beon: in std_logic_vector(0 downto 0);
-        sel_pc_bgti: in std_logic_vector(0 downto 0);
+        sel_pc_beon: in std_logic;
+        sel_pc_bgti: in std_logic;
 
         sel_mrf_wr: in std_logic_vector(1 downto 0);
         sel_mrf_wd: in std_logic_vector(2 downto 0);
-        sel_rd_cmpi: in std_logic_vector(0 downto 0);
-        sel_rd_beon: in std_logic_vector(0 downto 0);
+        sel_rd_cmpi: in std_logic;
+        sel_rd_beon: in std_logic;
 
-        sel_bank_wr: in std_logic_vector(0 downto 0);
+        sel_bank_wr: in std_logic;
 
         sel_alu_lhs: in std_logic_vector(2 downto 0);
         sel_alu_rhs: in std_logic_vector(1 downto 0);
         -- TODO: Convert to std_logic_vector
         alu_op: in std_logic;
 
-        sel_mem_addr: in std_logic_vector(0 downto 0);
+        sel_mem_addr: in std_logic;
 
         opc: out std_logic_vector(2 downto 0);
         funct: out std_logic_vector(1 downto 0);
@@ -49,35 +49,6 @@ architecture structural of data_path is
             z : inout std_logic_vector(N-1 downto 0);
             alu_zero: out std_logic;
             alu_borrow: out std_logic
-        );
-    end component;
-    -- component | controller
-    component controller is
-        port(
-            clk : in std_logic := '0';
-            -- input signals
-            opc : in std_logic_vector(2 downto 0);
-            funct: in std_logic_vector(1 downto 0);
-            q, Reset: in std_logic;
-            alu_zero: in std_logic;
-            alu_borrow: in std_logic;
-            -- output signals
-            rst: out std_logic;
-            we_mrf : out std_logic;
-            we_bank: out std_logic;
-            we_mem : out std_logic;
-            sel_pc : out std_logic_vector(1 downto 0);
-            sel_alu_lhs : out std_logic_vector(2 downto 0);
-            sel_alu_rhs : out std_logic_vector(1 downto 0);
-            alu_op : out std_logic;
-            sel_pc_bgti : out std_logic;
-            sel_rd_cmpi : out std_logic;
-            sel_pc_beon : out std_logic;
-            sel_rd_beon : out std_logic;
-            sel_mem_addr: out std_logic;
-            sel_bank_wr : out std_logic;
-            sel_mrf_wd  : out std_logic_vector(2 downto 0);
-            sel_mrf_wr  : out std_logic_vector(1 downto 0)
         );
     end component;
     -- component | sign_extend
@@ -228,7 +199,7 @@ architecture structural of data_path is
             inp_0 : in std_logic_vector(n-1 downto 0);
             inp_1 : in std_logic_vector(n-1 downto 0);
 
-            sel: in std_logic_vector(0 downto 0);
+            sel: in std_logic;
             dataout: out std_logic_vector(n-1 downto 0)
         );
     end component;
