@@ -273,7 +273,9 @@ architecture structural of data_path is
             std_logic_vector(n - 1 downto 0);
 
     -- TODO: Remove This
-    signal mux_dummy_in: std_logic_vector(n - 1 downto 0) := (others => 'U');
+    -- Initializing to uninitialized to immediately notice any bugs in the code
+    signal mux_dummy_in_n_bit: std_logic_vector(n - 1 downto 0) := (others => 'U');
+    signal mux_dummy_in_3_bit: std_logic_vector(3 - 1 downto 0) := (others => 'U');
 
     signal mux_mrf_wr_in_0, mux_mrf_wr_in_1, mux_mrf_wr_in_2, mux_mrf_wr_out:
         std_logic_vector(3 - 1 downto 0);
@@ -431,7 +433,7 @@ begin
         mux_mrf_wr_in_0,
         mux_mrf_wr_in_1,
         mux_mrf_wr_in_2,
-        mux_dummy_in,
+        mux_dummy_in_3_bit,
         sel_mrf_wr,
         mux_mrf_wr_out
     );
@@ -442,9 +444,9 @@ begin
         mux_mrf_wd_in_2,
         mux_mrf_wd_in_3,
         mux_mrf_wd_in_4,
-        mux_dummy_in,
-        mux_dummy_in,
-        mux_dummy_in,
+        mux_dummy_in_n_bit,
+        mux_dummy_in_n_bit,
+        mux_dummy_in_n_bit,
         sel_mrf_wd,
         mux_mrf_wd_out
     );
@@ -477,8 +479,8 @@ begin
         mux_alu_lhs_in_3,
         mux_alu_lhs_in_4,
         mux_alu_lhs_in_5,
-        mux_dummy_in,
-        mux_dummy_in,
+        mux_dummy_in_n_bit,
+        mux_dummy_in_n_bit,
         sel_alu_lhs,
         mux_alu_lhs_out
     );
@@ -558,11 +560,11 @@ begin
         lshift_stoi_in, lshift_stoi_out
     );
 
-    lshift_ltor: shift_to_left generic map(n, n) port map(
+    lshift_ltor: shift_to_left generic map(n, 3) port map(
         lshift_ltor_in, lshift_ltor_amount, lshift_ltor_out
     );
 
-    lshift_luis: shift_to_left generic map(n, n) port map(
+    lshift_luis: shift_to_left generic map(n, 3) port map(
         lshift_luis_in, lshift_luis_amount, lshift_luis_out
     );
 
