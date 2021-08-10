@@ -289,11 +289,6 @@ begin
         inst
     );
 
-    -- Controller inputs
-    opc <= inst(8 downto 6);
-    funct <= inst(1 downto 0);
-    q <= inst(12);
-
     mrf: register_file_3 generic map(3) port map(
         clk,
         rst,
@@ -445,8 +440,8 @@ begin
 
     -- SE: Sign Extend
     -- ZE: Zero Extend
-    se_stoi: sign_extend generic map(4, n) port map(
-        se_stoi_in, se_stoi_out
+    se_cmpi: sign_extend generic map(4, n) port map(
+        se_cmpi_in, se_cmpi_out
     );
 
     se_ltor: sign_extend generic map(7, n) port map(
@@ -457,12 +452,12 @@ begin
         se_luis_in, se_luis_out
     );
 
-    se_bgti_immh: sign_extend generic map(5, n) port map(
-        se_bgti_immh_in, se_bgti_immh_out
+    se_bgti_imml: sign_extend generic map(4, n) port map(
+    se_bgti_imml_in, se_bgti_imml_out
     );
 
-    se_bgti_imml: sign_extend generic map(4, n) port map(
-        se_bgti_imml_in, se_bgti_imml_out
+    se_bgti_immh: sign_extend generic map(5, n) port map(
+    se_bgti_immh_in, se_bgti_immh_out
     );
 
     ze_stoi: zero_extend generic map(4, n) port map(
@@ -533,5 +528,156 @@ begin
     );
 
     -- # Connections
+    -- Connnections are grouped in the order of definitions of components above, and only their
+    -- inputs are connected. The reason is, outputs will be connected somewhere else, by some other
+    -- component's input. This way, it is more compact and more maintainable to do so.
 
+    -- Controller inputs
+    opc <= inst(8 downto 6);
+    funct <= inst(1 downto 0);
+    q <= inst(12);
+
+    -- Instruction slices
+    z_type_rd <= inst(15 downto 13);
+    z_type_imm <= inst(12 downto 9);
+    z_type_rs <= inst(5 downto 3);
+    z_type_rt <= inst(2 downto 0);
+    i_type_imm <= inst(15 downto 9);
+    i_type_shamt <= inst(5 downto 3);
+    i_type_rd <= inst(2 downto 0);
+    n_type_immh <= inst(15 downto 11);
+    n_type_addr <= inst(10 downto 9);
+    n_type_imml <= inst(5 downto 2);
+    q_type_rs <= inst(15 downto 13);
+    q_type_rd <= inst(11 downto 9);
+    q_type_rt <= inst(5 downto 3);
+    q_type_shamt <= inst(2 downto 0);
+
+    pc_in <= mux_pc_out;
+    we_pc <= '1';
+
+    inst_addr <= pc_out;
+
+    -- Same as: q_type_rs
+    mrf_reg_num_1 <= z_type_rd;
+    -- Same as: q_type_rt
+    mrf_reg_num_2 <= z_type_rs;
+    mrf_reg_num_3 <= z_type_rt;
+    mrf_wr <= mux_mrf_wr_out;
+    mrf_wd <= mux_mrf_wd_out;
+
+    bank_reg_num <= n_type_addr;
+    bank_wr <= mux_bank_wr_out;
+    bank_wd <= adder_pc_plus_2_out;
+
+    alu_lhs <= mux_alu_lhs_out;
+    alu_rhs <= mux_alu_rhs_out;
+
+    mem_addr <= mux_mem_addr_out;
+    mem_data_in <= adder_stoi_value_out;
+
+    mux_pc_in_0 <= adder_pc_plus_2_out;
+    mux_pc_in_1 <= mux_pc_beon_out;
+    mux_pc_in_2 <= alu_out;
+    mux_pc_in_3 <= mux_pc_bgti_out;
+
+    mux_pc_beon_in_0 <= lshift_beon_q_ne_1_out;
+    mux_pc_beon_in_1 <= adder_beon_out;
+
+    mux_pc_bgti_in_0 <= adder_pc_plus_2_out;
+    mux_pc_bgti_in_1 <= concat_bgti_out;
+
+    mux_mrf_wr_in_0 <= z_type_rd;
+    mux_mrf_wr_in_1 <= i_type_rd;
+    mux_mrf_wr_in_2 <= q_type_rd;
+
+    mux_mrf_wd_in_0 <= mux_rd_cmpi_out;
+    mux_mrf_wd_in_1 <= lshift_ltor_out;
+    mux_mrf_wd_in_2 <= concat_luis_out;
+    mux_mrf_wd_in_3 <= lshift_subs_out;
+    mux_mrf_wd_in_4 <= mux_rd_beon_out;
+
+    mux_rd_cmpi_in_0 <= x"FFFF";
+    mux_rd_cmpi_in_1 <= x"0000";
+
+    -- TODO: Create a not component
+    mux_rd_beon_in_0 <= not mrf_out_1;
+    mux_rd_beon_in_1 <= concat_beon_out;
+
+    mux_bank_wr_in_0 <= inst(10 downto 9);
+    mux_bank_wr_in_1 <= b"11";
+
+    mux_alu_lhs_in_0 <= se_bgti_imml_out;
+    mux_alu_lhs_in_1 <= se_cmpi_out;
+    mux_alu_lhs_in_2 <= lshift_beon_q_eq_1_out;
+    mux_alu_lhs_in_3 <= mrf_out_1;
+    mux_alu_lhs_in_4 <= mrf_out_3;
+    mux_alu_lhs_in_5 <= adder_pc_plus_2_out;
+
+    mux_alu_rhs_in_0 <= mrf_out_2;
+    mux_alu_rhs_in_1 <= se_bgti_immh_out;
+    mux_alu_rhs_in_2 <= pow_base_4_beon_out;
+    mux_alu_rhs_in_3 <= lshift_jalv_out;
+
+    mux_mem_addr_in_0 <= alu_out;
+    mux_mem_addr_in_1 <= se_ltor_out;
+
+    adder_pc_plus_2_lhs <= pc_out;
+    adder_pc_plus_2_rhs <= x"0002";
+
+    adder_beon_lhs <= pc_out;
+    adder_beon_rhs <= alu_out;
+
+    adder_stoi_value_lhs <= ze_stoi_out;
+    adder_stoi_value_rhs <= lshift_stoi_out;
+
+    se_cmpi_in <= z_type_imm;
+
+    se_ltor_in <= concat_ltor_out;
+
+    se_luis_in <= i_type_imm;
+
+    se_bgti_imml_in <= n_type_imml;
+    se_bgti_immh_in <= n_type_immh;
+
+    ze_stoi_in <= z_type_imm;
+
+    ze_jalv_in <= concat_jalv_out;
+
+    lshift_stoi_in <= z_type_rd;
+
+    lshift_ltor_in <= mem_data_out;
+    lshift_ltor_amount <= pow_base_4_ltor_out;
+
+    lshift_luis_in <= se_ltor_out;
+    lshift_luis_amount <= i_type_shamt;
+
+    lshift_jalv_in <= ze_jalv_out;
+
+    lshift_subs_in <= alu_out;
+    lshift_subs_amount <= q_type_shamt;
+
+    lshift_beon_q_eq_1_in <= q_type_rs;
+
+    lshift_beon_q_ne_1_in <= pc_out;
+    lshift_beon_q_ne_1_amount <= q_type_shamt;
+
+    pow_base_4_ltor_exponent <= i_type_shamt;
+
+    pow_base_4_beon_exponent <= q_type_shamt;
+
+    concat_ltor_lhs <= i_type_imm;
+    concat_ltor_rhs <= x"0";
+
+    concat_luis_lhs <= lshift_luis_out(15 downto 8);
+    concat_luis_rhs <= x"00";
+
+    concat_bgti_lhs <= pc_out(15 downto 12);
+    concat_bgti_rhs <= bank_out(11 downto 0);
+
+    concat_jalv_lhs <= n_type_immh;
+    concat_jalv_rhs <= n_type_imml;
+
+    concat_beon_lhs <= q_type_rs(15 downto 8);
+    concat_beon_rhs <= q_type_rt(7 downto 0);
 end architecture;
