@@ -274,6 +274,7 @@ architecture structural of data_path is
     signal mrf_out: std_logic_vector(n - 1 downto 0) := (others => '0');
     signal mux_rd_cmpi_out: std_logic_vector(n-1 downto 0) := (others => '0');
 begin
+    -- # Components
     -- Program Counter
     pc: register_n_bit generic map(n) port map(
         pc_in, clk, pc_out, rst, '1'
@@ -321,47 +322,96 @@ begin
     );
 
     mux_pc: multiplexer_2_bit_selector generic map(n) port map(
-        mux_pc_in, sel_pc, mux_pc_out
+        mux_pc_in_0,
+        mux_pc_in_1,
+        mux_pc_in_2,
+        mux_pc_in_3,
+        sel_pc,
+        mux_pc_out
     );
 
     mux_pc_beon: multiplexer_1_bit_selector generic map(n) port map(
-        mux_pc_beon_in, sel_pc_beon, mux_pc_beon_out
+        mux_pc_beon_in_0,
+        mux_pc_beon_in_1,
+        sel_pc_beon,
+        mux_pc_beon_out
     );
 
     mux_pc_bgti: multiplexer_1_bit_selector generic map(n) port map(
-        mux_pc_bgti_in, sel_pc_bgti, mux_pc_bgti_out
+        mux_pc_bgti_in_0,
+        mux_pc_bgti_in_1,
+        sel_pc_bgti,
+        mux_pc_bgti_out
     );
 
     mux_mrf_wr: multiplexer_2_bit_selector generic map(3) port map(
-        mux_mrf_wr_in, sel_mrf_wr, mux_mrf_wr_out
+        mux_mrf_wr_in_0,
+        mux_mrf_wr_in_1,
+        mux_mrf_wr_in_2,
+        open,
+        sel_mrf_wr,
+        mux_mrf_wr_out
     );
 
     mux_mrf_wd: multiplexer_3_bit_selector generic map(n) port map(
-        mux_mrf_wd_in, sel_mrf_wd, mux_mrf_wd_out
+        mux_mrf_wd_in_0,
+        mux_mrf_wd_in_1,
+        mux_mrf_wd_in_2,
+        mux_mrf_wd_in_3,
+        mux_mrf_wd_in_4,
+        open,
+        open,
+        open,
+        sel_mrf_wd,
+        mux_mrf_wd_out
     );
 
     mux_rd_cmpi: multiplexer_1_bit_selector generic map(n) port map(
-        mux_rd_cmpi_in, sel_rd_cmpi, mux_rd_cmpi_out
+        mux_rd_cmpi_in_0,
+        mux_rd_cmpi_in_1,
+        sel_rd_cmpi,
+        mux_rd_cmpi_out
     );
 
     mux_rd_beon: multiplexer_1_bit_selector generic map(n) port map(
-        mux_rd_beon_in, sel_rd_beon, mux_rd_beon_out
+        mux_rd_beon_in_0,
+        mux_rd_beon_in_1,
+        sel_rd_beon,
+        mux_rd_beon_out
     );
 
     mux_bank_wr: multiplexer_1_bit_selector generic map(2) port map(
-        mux_bank_wr_in, sel_bank_wr, mux_bank_wr_out
+        mux_bank_wr_in_0,
+        mux_bank_wr_in_1,
+        sel_bank_wr,
+        mux_bank_wr_out
     );
 
     mux_alu_lhs: multiplexer_3_bit_selector generic map(n) port map(
-        mux_alu_lhs_in, sel_alu_lhs, mux_alu_lhs_out
+        mux_alu_lhs_in_0,
+        mux_alu_lhs_in_1,
+        mux_alu_lhs_in_2,
+        mux_alu_lhs_in_3,
+        mux_alu_lhs_in_4,
+        mux_alu_lhs_in_5,
+        sel_alu_lhs,
+        mux_alu_lhs_out
     );
 
     mux_alu_rhs: multiplexer_2_bit_selector generic map(n) port map(
-        mux_alu_rhs_in, sel_alu_rhs, mux_alu_rhs_out
+        mux_alu_rhs_in_0,
+        mux_alu_rhs_in_1,
+        mux_alu_rhs_in_2,
+        mux_alu_rhs_in_3,
+        sel_alu_rhs,
+        mux_alu_rhs_out
     );
 
-    mux_mem_addr: multiplexer_2_bit_selector generic map(n) port map(
-        mux_mem_addr_in, sel_mem_addr, mux_mem_addr_out
+    mux_mem_addr: multiplexer_1_bit_selector generic map(n) port map(
+        mux_mem_addr_in_0,
+        mux_mem_addr_in_1,
+        sel_mem_addr,
+        mux_mem_addr_out
     );
 
     adder_pc_plus_2: full_adder_n_bit generic map(n) port map(
@@ -476,4 +526,7 @@ begin
     concat_beon: concat generic map(8, 8) port map(
         concat_beon_lhs, concat_beon_rhs, concat_beon_out
     );
+
+    -- # Connections
+
 end architecture;
