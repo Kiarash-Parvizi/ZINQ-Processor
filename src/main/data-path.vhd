@@ -6,7 +6,34 @@ use ieee.numeric_std.all;
 entity data_path is
     port(
         clk: in std_logic;
-        rst: in std_logic
+        rst: in std_logic;
+
+        we_mrf: in std_logic;
+        we_bank: in std_logic;
+        we_mem: in std_logic;
+
+        sel_pc: in std_logic_vector(1 downto 0);
+        sel_pc_beon: in std_logic;
+        sel_pc_bgti: in std_logic;
+
+        sel_mrf_wr: in std_logic_vector(1 downto 0);
+        sel_mrf_wd: in std_logic_vector(2 downto 0);
+        sel_rd_cmpi: in std_logic;
+        sel_rd_beon: in std_logic;
+
+        sel_bank_wr: in std_logic;
+
+        sel_alu_lhs: in std_logic_vector(2 downto 0);
+        sel_alu_rhs: in std_logic_vector(1 downto 0);
+        alu_op: in std_logic;
+
+        sel_mem_addr: in std_logic;
+
+        opc: out std_logic_vector(2 downto 0);
+        funct: out std_logic_vector(1 downto 0);
+        q: out std_logic;
+        alu_zero: out std_logic;
+        alu_borrow: out std_logic
     );
 end entity;
 
@@ -236,30 +263,7 @@ architecture structural of data_path is
     end component;
     ----------------------
     constant n: natural := 16;
-    -------- signals:
-    ---- Controller:
-    -- input signals
-    signal opc : std_logic_vector(2 downto 0);
-    signal funct: std_logic_vector(1 downto 0);
-    signal q, Reset: std_logic;
-    signal alu_zero: std_logic;
-    signal alu_borrow: std_logic;
-    -- output signals
-    signal we_mrf : std_logic;
-    signal we_bank: std_logic;
-    signal we_mem : std_logic;
-    signal sel_pc : std_logic_vector(1 downto 0);
-    signal sel_alu_lhs : std_logic_vector(2 downto 0);
-    signal sel_alu_rhs : std_logic_vector(1 downto 0);
-    signal alu_op : std_logic;
-    signal sel_pc_bgti : std_logic;
-    signal sel_rd_cmpi : std_logic;
-    signal sel_pc_beon : std_logic;
-    signal sel_rd_beon : std_logic;
-    signal sel_mem_addr: std_logic;
-    signal sel_bank_wr : std_logic;
-    signal sel_mrf_wd  : std_logic_vector(2 downto 0);
-    signal sel_mrf_wr  : std_logic_vector(1 downto 0);
+
     ---- pc:
     signal pc_out: std_logic_vector(n - 1 downto 0) := (others => '0');
     signal pc_in : std_logic_vector(n - 1 downto 0);
