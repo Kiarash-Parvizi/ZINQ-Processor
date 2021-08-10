@@ -145,8 +145,8 @@ architecture structural of data_path is
     -- component | rom
     component rom is
         port(
-            address: in  std_logic_vector(7 downto 0);
-            dataout: out std_logic_vector(15 downto 0)
+            address: in  std_logic_vector(15 downto 0);
+            data_out: out std_logic_vector(15 downto 0)
         );
     end component;
     -- component register_file_3
@@ -239,7 +239,7 @@ architecture structural of data_path is
     signal we_pc: std_logic;
     signal pc_in, pc_out: std_logic_vector(n - 1 downto 0);
 
-    signal inst_addr: std_logic_vector(8 - 1 downto 0);
+    signal inst_addr: std_logic_vector(n - 1 downto 0);
     signal inst: std_logic_vector(n - 1 downto 0);
 
     signal mrf_reg_num_1, mrf_reg_num_2, mrf_reg_num_3, mrf_wr: std_logic_vector(3 - 1 downto 0);
@@ -679,7 +679,7 @@ begin
     mux_rd_cmpi_in_0 <= x"FFFF";
     mux_rd_cmpi_in_1 <= x"0000";
 
-    -- TODO: Create a not component
+    -- TODO: Create a not c-omponent
     mux_rd_beon_in_0 <= not mrf_out_1;
     mux_rd_beon_in_1 <= concat_beon_out;
 

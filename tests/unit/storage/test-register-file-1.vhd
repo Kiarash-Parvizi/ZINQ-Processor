@@ -6,30 +6,34 @@ end entity;
 
 architecture structural of test_register_file_1 is
     component register_file_1 is
-        generic(addr_size: natural);
+        generic(
+            constant addr_size: natural;
+            constant n: natural
+        );
         port(
             -- input
             clk, rst, we: in std_logic;
             r0: in std_logic_vector(addr_size-1 downto 0);
             wr: in std_logic_vector(addr_size-1 downto 0);
-            wd: in std_logic_vector((2**addr_size)-1 downto 0);
+            wd: in std_logic_vector(n-1 downto 0);
             -- output
-            out0: out std_logic_vector((2**addr_size)-1 downto 0)
+            out0: out std_logic_vector(n-1 downto 0)
         );
     end component;
     ---- constants
     constant addr_size: natural := 3;
+    constant n: natural := 8;
     ---- signals:
     -- input
     signal clk, rst, we: std_logic;
     signal r0: std_logic_vector(addr_size-1 downto 0);
     signal wr: std_logic_vector(addr_size-1 downto 0);
-    signal wd: std_logic_vector((2**addr_size)-1 downto 0);
+    signal wd: std_logic_vector(n-1 downto 0);
     -- output
-    signal out0: std_logic_vector((2**addr_size)-1 downto 0);
+    signal out0: std_logic_vector(n-1 downto 0);
 begin
     instance: register_file_1
-        generic map(addr_size)
+        generic map(addr_size, n)
         port map(
             clk, rst, we,
             r0  ,
