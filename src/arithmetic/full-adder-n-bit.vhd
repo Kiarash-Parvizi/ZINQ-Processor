@@ -1,6 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.arithmetic.all;
 
 entity full_adder_n_bit is
     generic(
@@ -16,6 +15,16 @@ entity full_adder_n_bit is
 end entity;
 
 architecture structural of full_adder_n_bit is
+    component full_adder_1_bit is
+        port(
+            a, b: in std_logic;
+            cin: in std_logic;
+
+            sum: out std_logic;
+            cout: out std_logic
+        );
+    end component;
+
     signal carry: std_logic_vector(n - 2 downto 0);
 begin
     l_bit_wise_adders:
