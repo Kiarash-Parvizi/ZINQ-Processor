@@ -51,30 +51,6 @@ architecture structural of data_path is
             sel_mrf_wr  : out std_logic_vector(1 downto 0)
         );
     end component;
-    -- component | multiplexer_2_to_1
-    component multiplexer_2_to_1 is
-        generic(
-            constant inout_len: natural
-        );
-        port(
-            inputs_concat: in std_logic_vector(2 * inout_len - 1 downto 0);
-            selector: in std_logic;
-            result: out std_logic_vector(inout_len - 1 downto 0)
-        );
-    end component;
-    -- component | multiplexer_n_to_1
-    component multiplexer_n_to_1 is
-        generic(
-            constant inout_len: natural;
-            constant inputs_count: natural
-        );
-        port(
-            inputs_concat: in std_logic_vector(inputs_count * inout_len - 1 downto 0);
-            -- If the multiplexer is n-bit, and n = 2^m, this long expression is m
-            selector: in std_logic_vector(natural(ceil(log2(real(inputs_count)))) - 1 downto 0);
-            result: out std_logic_vector(inout_len - 1 downto 0)
-        );
-    end component;
     -- component | sign_extend
     component sign_extend is
         generic(
@@ -216,6 +192,47 @@ architecture structural of data_path is
             cout: out std_logic
         );
     end component;
+
+    component multiplexer_1_bit_selector is
+        generic(n: natural);
+        port(
+            inp_0 : in std_logic_vector(n-1 downto 0);
+            inp_1 : in std_logic_vector(n-1 downto 0);
+
+            sel: in std_logic_vector(0 downto 0);
+            dataout: out std_logic_vector(n-1 downto 0)
+        );
+    end component;
+
+    component multiplexer_2_bit_selector is
+        generic(n: natural);
+        port(
+            inp_0 : in std_logic_vector(n-1 downto 0);
+            inp_1 : in std_logic_vector(n-1 downto 0);
+            inp_2 : in std_logic_vector(n-1 downto 0);
+            inp_3 : in std_logic_vector(n-1 downto 0);
+
+            sel: in std_logic_vector(1 downto 0);
+            dataout: out std_logic_vector(n-1 downto 0)
+        );
+    end component;
+
+    component multiplexer_3_bit_selector is
+        generic(n: natural);
+        port(
+            inp_0 : in std_logic_vector(n-1 downto 0);
+            inp_1 : in std_logic_vector(n-1 downto 0);
+            inp_2 : in std_logic_vector(n-1 downto 0);
+            inp_3 : in std_logic_vector(n-1 downto 0);
+            inp_4 : in std_logic_vector(n-1 downto 0);
+            inp_5 : in std_logic_vector(n-1 downto 0);
+            inp_6 : in std_logic_vector(n-1 downto 0);
+            inp_7 : in std_logic_vector(n-1 downto 0);
+
+            sel: in std_logic_vector(2 downto 0);
+            dataout: out std_logic_vector(n-1 downto 0)
+        );
+    end component;
     ----------------------
     constant n: natural := 16;
     -------- signals:
@@ -299,47 +316,47 @@ begin
         clk, we_mem, mux_mem_addr_out, mem_in, mem_out
     );
 
-    mux_pc: multiplexer_n_to_1 generic map(n, 4) port map(
+    mux_pc: multiplexer_2_bit_selector generic map(n) port map(
         mux_pc_in, sel_pc, mux_pc_out
     );
 
-    mux_pc_beon: multiplexer_n_to_1 generic map(n, 2) port map(
+    mux_pc_beon: multiplexer_1_bit_selector generic map(n) port map(
         mux_pc_beon_in, sel_pc_beon, mux_pc_beon_out
     );
 
-    mux_pc_bgti: multiplexer_n_to_1 generic map(n, 2) port map(
+    mux_pc_bgti: multiplexer_1_bit_selector generic map(n) port map(
         mux_pc_bgti_in, sel_pc_bgti, mux_pc_bgti_out
     );
 
-    mux_mrf_wr: multiplexer_n_to_1 generic map(3, 3) port map(
+    mux_mrf_wr: multiplexer_2_bit_selector generic map(3) port map(
         mux_mrf_wr_in, sel_mrf_wr, mux_mrf_wr_out
     );
 
-    mux_mrf_wd: multiplexer_n_to_1 generic map(16, 5) port map(
+    mux_mrf_wd: multiplexer_3_bit_selector generic map(n) port map(
         mux_mrf_wd_in, sel_mrf_wd, mux_mrf_wd_out
     );
 
-    mux_rd_cmpi: multiplexer_2_to_1 generic map(16) port map(
+    mux_rd_cmpi: multiplexer_1_bit_selector generic map(n) port map(
         mux_rd_cmpi_in, sel_rd_cmpi, mux_rd_cmpi_out
     );
 
-    mux_rd_beon: multiplexer_2_to_1 generic map(16) port map(
+    mux_rd_beon: multiplexer_1_bit_selector generic map(n) port map(
         mux_rd_beon_in, sel_rd_beon, mux_rd_beon_out
     );
 
-    mux_bank_wr: multiplexer_2_to_1 generic map(2) port map(
+    mux_bank_wr: multiplexer_1_bit_selector generic map(2) port map(
         mux_bank_wr_in, sel_bank_wr, mux_bank_wr_out
     );
 
-    mux_alu_lhs: multiplexer_n_to_1 generic map(n, 6) port map(
+    mux_alu_lhs: multiplexer_3_bit_selector generic map(n) port map(
         mux_alu_lhs_in, sel_alu_lhs, mux_alu_lhs_out
     );
 
-    mux_alu_rhs: multiplexer_n_to_1 generic map(n, 4) port map(
+    mux_alu_rhs: multiplexer_2_bit_selector generic map(n) port map(
         mux_alu_rhs_in, sel_alu_rhs, mux_alu_rhs_out
     );
 
-    mux_mem_addr: multiplexer_2_to_1 generic map(n) port map(
+    mux_mem_addr: multiplexer_2_bit_selector generic map(n) port map(
         mux_mem_addr_in, sel_mem_addr, mux_mem_addr_out
     );
 
