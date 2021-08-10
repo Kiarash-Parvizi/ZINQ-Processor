@@ -5,7 +5,8 @@ use ieee.numeric_std.all;
 
 entity data_path is
     port(
-        clk: in std_logic
+        clk: in std_logic;
+        rst: in std_logic
     );
 end entity;
 
@@ -244,7 +245,6 @@ architecture structural of data_path is
     signal alu_zero: std_logic;
     signal alu_borrow: std_logic;
     -- output signals
-    signal rst: std_logic;
     signal we_mrf : std_logic;
     signal we_bank: std_logic;
     signal we_mem : std_logic;
