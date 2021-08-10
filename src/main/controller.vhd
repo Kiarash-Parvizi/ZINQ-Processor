@@ -3,15 +3,15 @@ use ieee.std_logic_1164.all;
 
 entity controller is
     port(
-        clk : in std_logic := '0';
+        clk: in std_logic := '0';
+        rst: in std_logic;
         -- input signals
         opc : in std_logic_vector(2 downto 0);
         func: in std_logic_vector(1 downto 0);
-        q, Reset: in std_logic;
+        q: in std_logic;
         alu_zero: in std_logic;
         alu_borrow: in std_logic;
         -- output signals
-        rst: out std_logic;
         we_mrf : out std_logic;
         we_bank: out std_logic;
         we_mem : out std_logic;
@@ -72,7 +72,7 @@ begin
     -- flip-flop
     -- table
     -- opc based
-    notRst <= not (Reset or reset_state);
+    notRst <= not (rst or reset_state);
     O_000 <= (not a and not b and not c);
     O_001 <= (not a and not b and c);
     O_01d <= (not a and b);
@@ -94,7 +94,6 @@ begin
     -- custom
     ------------------------
     ------------------------
-    rst <= Reset;
     -- we
     we_mrf  <= notRst and ((not a) or O_1d0);
     we_bank <= notRst and O_1d1;
@@ -134,7 +133,7 @@ begin
     -- flip flop
     process(clk) begin
         if(clk'event and clk='1') then
-            reset_state <= Reset;
+            reset_state <= rst;
         end if;
     end process;
 end architecture;
