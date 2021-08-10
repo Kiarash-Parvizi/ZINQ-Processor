@@ -13,21 +13,22 @@ entity data_path is
         we_mem: in std_logic;
 
         sel_pc: in std_logic_vector(1 downto 0);
-        sel_pc_beon: in std_logic;
-        sel_pc_bgti: in std_logic;
+        sel_pc_beon: in std_logic_vector(0 downto 0);
+        sel_pc_bgti: in std_logic_vector(0 downto 0);
 
         sel_mrf_wr: in std_logic_vector(1 downto 0);
         sel_mrf_wd: in std_logic_vector(2 downto 0);
-        sel_rd_cmpi: in std_logic;
-        sel_rd_beon: in std_logic;
+        sel_rd_cmpi: in std_logic_vector(0 downto 0);
+        sel_rd_beon: in std_logic_vector(0 downto 0);
 
-        sel_bank_wr: in std_logic;
+        sel_bank_wr: in std_logic_vector(0 downto 0);
 
         sel_alu_lhs: in std_logic_vector(2 downto 0);
         sel_alu_rhs: in std_logic_vector(1 downto 0);
+        -- TODO: Convert to std_logic_vector
         alu_op: in std_logic;
 
-        sel_mem_addr: in std_logic;
+        sel_mem_addr: in std_logic_vector(0 downto 0);
 
         opc: out std_logic_vector(2 downto 0);
         funct: out std_logic_vector(1 downto 0);
@@ -264,19 +265,111 @@ architecture structural of data_path is
     ----------------------
     constant n: natural := 16;
 
-    ---- pc:
-    signal pc_out: std_logic_vector(n - 1 downto 0) := (others => '0');
-    signal pc_in : std_logic_vector(n - 1 downto 0);
-    ---- inst:
-    signal inst  : std_logic_vector(n - 1 downto 0);
-    ---- Bank RF
-    signal mux_bank_wr_out: std_logic_vector(1 downto 0) := (others => '0');
-    signal bank_out: std_logic_vector(n - 1 downto 0) := (others => '0');
-    ---- MRF
-    signal mux_mrf_wr_out: std_logic_vector(2 downto 0) := (others => '0');
-    signal mux_mrf_wd_out: std_logic_vector(n-1 downto 0) := (others => '0');
-    signal mrf_out: std_logic_vector(n - 1 downto 0) := (others => '0');
-    signal mux_rd_cmpi_out: std_logic_vector(n-1 downto 0) := (others => '0');
+    signal we_pc: std_logic;
+    signal pc_in, pc_out: std_logic_vector(n - 1 downto 0);
+
+    signal inst_addr: std_logic_vector(8 - 1 downto 0);
+    signal inst: std_logic_vector(n - 1 downto 0);
+
+    signal mrf_reg_num_1, mrf_reg_num_2, mrf_reg_num_3, mrf_wr: std_logic_vector(3 - 1 downto 0);
+    signal mrf_wd, mrf_out_1, mrf_out_2, mrf_out_3: std_logic_vector(n - 1 downto 0);
+
+    signal bank_reg_num, bank_wr: std_logic_vector(2 - 1 downto 0);
+    signal bank_wd, bank_out: std_logic_vector(n - 1 downto 0);
+
+    signal alu_lhs, alu_rhs, alu_out: std_logic_vector(n - 1 downto 0);
+
+    signal mem_addr, mem_data_in, mem_data_out: std_logic_vector(n - 1 downto 0);
+
+    signal
+        mux_pc_in_0, mux_pc_in_1, mux_pc_in_2, mux_pc_in_3, mux_pc_out,
+        mux_pc_beon_in_0, mux_pc_beon_in_1, mux_pc_beon_out,
+        mux_pc_bgti_in_0, mux_pc_bgti_in_1, mux_pc_bgti_out,
+        mux_mrf_wd_in_0, mux_mrf_wd_in_1, mux_mrf_wd_in_2, mux_mrf_wd_in_3, mux_mrf_wd_in_4,
+        mux_mrf_wd_out,
+        mux_rd_cmpi_in_0, mux_rd_cmpi_in_1, mux_rd_cmpi_out,
+        mux_rd_beon_in_0, mux_rd_beon_in_1, mux_rd_beon_out,
+        mux_alu_lhs_in_0, mux_alu_lhs_in_1, mux_alu_lhs_in_2, mux_alu_lhs_in_3, mux_alu_lhs_in_4,
+        mux_alu_lhs_in_5, mux_alu_lhs_out,
+        mux_alu_rhs_in_0, mux_alu_rhs_in_1, mux_alu_rhs_in_2, mux_alu_rhs_in_3, mux_alu_rhs_out,
+        mux_mem_addr_in_0, mux_mem_addr_in_1, mux_mem_addr_out:
+            std_logic_vector(n - 1 downto 0);
+
+    -- TODO: Remove This
+    signal mux_dummy_in: std_logic_vector(n - 1 downto 0) := (others => 'U');
+
+    signal mux_mrf_wr_in_0, mux_mrf_wr_in_1, mux_mrf_wr_in_2, mux_mrf_wr_out:
+        std_logic_vector(3 - 1 downto 0);
+
+    signal mux_bank_wr_in_0, mux_bank_wr_in_1, mux_bank_wr_out:
+        std_logic_vector(2 - 1 downto 0);
+
+    signal
+        adder_pc_plus_2_lhs, adder_pc_plus_2_rhs, adder_pc_plus_2_out,
+        adder_beon_lhs, adder_beon_rhs, adder_beon_out,
+        adder_stoi_value_lhs, adder_stoi_value_rhs, adder_stoi_value_out:
+            std_logic_vector(n - 1 downto 0);
+
+    signal se_cmpi_in: std_logic_vector(4 - 1 downto 0);
+    signal se_ltor_in: std_logic_vector(7 - 1 downto 0);
+    signal se_luis_in: std_logic_vector(7 - 1 downto 0);
+    signal se_bgti_imml_in: std_logic_vector(4 - 1 downto 0);
+    signal se_bgti_immh_in: std_logic_vector(5 - 1 downto 0);
+    signal ze_stoi_in: std_logic_vector(4 - 1 downto 0);
+    signal ze_jalv_in: std_logic_vector(9 - 1 downto 0);
+
+    signal
+        se_cmpi_out, se_ltor_out, se_luis_out, se_bgti_imml_out, se_bgti_immh_out,
+        ze_stoi_out, ze_jalv_out:
+            std_logic_vector(n - 1 downto 0);
+
+    signal
+        lshift_stoi_in, lshift_stoi_out,
+        lshift_ltor_in, lshift_ltor_out,
+        lshift_luis_in, lshift_luis_out,
+        lshift_jalv_in, lshift_jalv_out,
+        lshift_subs_in, lshift_subs_out,
+        lshift_beon_q_eq_1_in, lshift_beon_q_eq_1_out,
+        lshift_beon_q_ne_1_in, lshift_beon_q_ne_1_out:
+            std_logic_vector(n - 1 downto 0);
+
+    signal lshift_ltor_amount, lshift_luis_amount, lshift_subs_amount, lshift_beon_q_ne_1_amount:
+        std_logic_vector(3 - 1 downto 0);
+
+    signal pow_base_4_ltor_exponent, pow_base_4_beon_exponent:
+        std_logic_vector(3 - 1 downto 0);
+
+    signal pow_base_4_ltor_out, pow_base_4_beon_out:
+        std_logic_vector(n - 1 downto 0);
+
+    signal concat_ltor_lhs: std_logic_vector(7 - 1 downto 0);
+    signal concat_luis_lhs: std_logic_vector(8 - 1 downto 0);
+    signal concat_bgti_lhs: std_logic_vector(4 - 1 downto 0);
+    signal concat_jalv_lhs: std_logic_vector(5 - 1 downto 0);
+    signal concat_beon_lhs: std_logic_vector(8 - 1 downto 0);
+    signal concat_ltor_rhs: std_logic_vector(4 - 1 downto 0);
+    signal concat_luis_rhs: std_logic_vector(8 - 1 downto 0);
+    signal concat_bgti_rhs: std_logic_vector(12 - 1 downto 0);
+    signal concat_jalv_rhs: std_logic_vector(4 - 1 downto 0);
+    signal concat_beon_rhs: std_logic_vector(8 - 1 downto 0);
+
+    signal concat_ltor_out: std_logic_vector(11 - 1 downto 0);
+    signal concat_jalv_out: std_logic_vector(9 - 1 downto 0);
+
+    signal concat_luis_out, concat_bgti_out, concat_beon_out:
+        std_logic_vector(n - 1 downto 0);
+
+    signal
+        z_type_rd, z_type_rs, z_type_rt,
+        i_type_rd, i_type_shamt,
+        q_type_rs, q_type_rd, q_type_rt, q_type_shamt:
+            std_logic_vector(3 - 1 downto 0);
+
+    signal z_type_imm: std_logic_vector(4 - 1 downto 0);
+    signal i_type_imm: std_logic_vector(7 - 1 downto 0);
+    signal n_type_immh: std_logic_vector(5 - 1 downto 0);
+    signal n_type_addr: std_logic_vector(2 - 1 downto 0);
+    signal n_type_imml: std_logic_vector(4 - 1 downto 0);
 begin
     -- # Components
     -- Program Counter
@@ -318,11 +411,20 @@ begin
     );
 
     alu_instance: alu generic map(n) port map(
-        alu_lhs, alu_rhs, alu_op, alu_out, alu_zero, alu_borrow
+        alu_lhs,
+        alu_rhs,
+        alu_op,
+        alu_out,
+        alu_zero,
+        alu_borrow
     );
 
     memory_unit: ram port map(
-        clk, we_mem, mem_addr, mem_data_in, mem_data_out
+        clk,
+        we_mem,
+        mem_addr,
+        mem_data_in,
+        mem_data_out
     );
 
     mux_pc: multiplexer_2_bit_selector generic map(n) port map(
@@ -352,7 +454,7 @@ begin
         mux_mrf_wr_in_0,
         mux_mrf_wr_in_1,
         mux_mrf_wr_in_2,
-        open,
+        mux_dummy_in,
         sel_mrf_wr,
         mux_mrf_wr_out
     );
@@ -363,9 +465,9 @@ begin
         mux_mrf_wd_in_2,
         mux_mrf_wd_in_3,
         mux_mrf_wd_in_4,
-        open,
-        open,
-        open,
+        mux_dummy_in,
+        mux_dummy_in,
+        mux_dummy_in,
         sel_mrf_wd,
         mux_mrf_wd_out
     );
@@ -398,6 +500,8 @@ begin
         mux_alu_lhs_in_3,
         mux_alu_lhs_in_4,
         mux_alu_lhs_in_5,
+        mux_dummy_in,
+        mux_dummy_in,
         sel_alu_lhs,
         mux_alu_lhs_out
     );
@@ -457,11 +561,11 @@ begin
     );
 
     se_bgti_imml: sign_extend generic map(4, n) port map(
-    se_bgti_imml_in, se_bgti_imml_out
+        se_bgti_imml_in, se_bgti_imml_out
     );
 
     se_bgti_immh: sign_extend generic map(5, n) port map(
-    se_bgti_immh_in, se_bgti_immh_out
+        se_bgti_immh_in, se_bgti_immh_out
     );
 
     ze_stoi: zero_extend generic map(4, n) port map(
