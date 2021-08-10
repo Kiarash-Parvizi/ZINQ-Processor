@@ -290,7 +290,7 @@ architecture structural of data_path is
             std_logic_vector(n - 1 downto 0);
 
     signal se_cmpi_in: std_logic_vector(4 - 1 downto 0);
-    signal se_ltor_in: std_logic_vector(7 - 1 downto 0);
+    signal se_ltor_in: std_logic_vector(11 - 1 downto 0);
     signal se_luis_in: std_logic_vector(7 - 1 downto 0);
     signal se_bgti_imml_in: std_logic_vector(4 - 1 downto 0);
     signal se_bgti_immh_in: std_logic_vector(5 - 1 downto 0);
@@ -312,7 +312,9 @@ architecture structural of data_path is
         lshift_beon_q_ne_1_in, lshift_beon_q_ne_1_out:
             std_logic_vector(n - 1 downto 0);
 
-    signal lshift_ltor_amount, lshift_luis_amount, lshift_subs_amount, lshift_beon_q_ne_1_amount:
+    signal lshift_ltor_amount:
+        std_logic_vector(n - 1 downto 0);
+    signal lshift_luis_amount, lshift_subs_amount, lshift_beon_q_ne_1_amount:
         std_logic_vector(3 - 1 downto 0);
 
     signal pow_base_4_ltor_exponent, pow_base_4_beon_exponent:
@@ -531,7 +533,7 @@ begin
         se_cmpi_in, se_cmpi_out
     );
 
-    se_ltor: sign_extend generic map(7, n) port map(
+    se_ltor: sign_extend generic map(11, n) port map(
         se_ltor_in, se_ltor_out
     );
 
@@ -560,7 +562,7 @@ begin
         lshift_stoi_in, lshift_stoi_out
     );
 
-    lshift_ltor: shift_to_left generic map(n, 3) port map(
+    lshift_ltor: shift_to_left generic map(n, n) port map(
         lshift_ltor_in, lshift_ltor_amount, lshift_ltor_out
     );
 
@@ -731,7 +733,7 @@ begin
 
     ze_jalv_in <= concat_jalv_out;
 
-    lshift_stoi_in <= z_type_rd;
+    lshift_stoi_in <= mrf_out_1;
 
     lshift_ltor_in <= mem_data_out;
     lshift_ltor_amount <= pow_base_4_ltor_out;
@@ -744,7 +746,7 @@ begin
     lshift_subs_in <= alu_out;
     lshift_subs_amount <= q_type_shamt;
 
-    lshift_beon_q_eq_1_in <= q_type_rs;
+    lshift_beon_q_eq_1_in <= mrf_out_1;
 
     lshift_beon_q_ne_1_in <= pc_out;
     lshift_beon_q_ne_1_amount <= q_type_shamt;
@@ -765,6 +767,6 @@ begin
     concat_jalv_lhs <= n_type_immh;
     concat_jalv_rhs <= n_type_imml;
 
-    concat_beon_lhs <= q_type_rs(15 downto 8);
-    concat_beon_rhs <= q_type_rt(7 downto 0);
+    concat_beon_lhs <= mrf_out_1(15 downto 8);
+    concat_beon_rhs <= mrf_out_2(7 downto 0);
 end architecture;
