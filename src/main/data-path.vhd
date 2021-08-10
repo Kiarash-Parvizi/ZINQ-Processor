@@ -288,32 +288,36 @@ begin
     funct <= inst(1 downto 0);
     q <= inst(12);
 
-    main_register_file: register_file_3 generic map(3) port map(
-        clk, rst, we_mrf,
-        inst(15 downto 13),
-        inst(5 downto 3),
-        inst(2 downto 0),
-        mux_mrf_wr_out,
-        mux_mrf_wd_out,
+    mrf: register_file_3 generic map(3) port map(
+        clk,
+        rst,
+        we_mrf,
+        mrf_reg_num_1,
+        mrf_reg_num_2,
+        mrf_reg_num_3,
+        mrf_wr,
+        mrf_wd,
         mrf_out_1,
         mrf_out_2,
         mrf_out_3
     );
 
-    bank_register_file: register_file_1 generic map(2) port map(
-        clk, rst, we_bank,
-        inst(10 downto 9),
-        mux_bank_wr_out,
-        pc_plus_2_out,
+    bank: register_file_1 generic map(2) port map(
+        clk,
+        rst,
+        we_bank,
+        bank_reg_num,
+        bank_wr,
+        bank_wd,
         bank_out
     );
 
     alu_instance: alu generic map(n) port map(
-        mux_alu_lhs_out, mux_alu_rhs_out, alu_op, alu_out, alu_zero, alu_borrow
+        alu_lhs, alu_rhs, alu_op, alu_out, alu_zero, alu_borrow
     );
 
     memory_unit: ram port map(
-        clk, we_mem, mux_mem_addr_out, mem_in, mem_out
+        clk, we_mem, mem_addr, mem_data_in, mem_data_out
     );
 
     mux_pc: multiplexer_2_bit_selector generic map(n) port map(
