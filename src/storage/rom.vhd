@@ -1,278 +1,33 @@
 library ieee ;
 use ieee.std_logic_1164.all;
-use ieee.numeric_Std.all; 
 
 entity rom is
     port(
-        address: in  std_logic_vector(7 downto 0);
-        dataout: out std_logic_vector(15 downto 0)
+        address: in std_logic_vector(15 downto 0);
+        data_out: out std_logic_vector(15 downto 0)
     );
 end entity;
 
-
 architecture structural of rom is
-constant d0: std_logic_vector(15 downto 0) := x"0000";
-constant d1: std_logic_vector(15 downto 0) := x"1111";
-constant d2: std_logic_vector(15 downto 0) := x"cccc";
-constant d3: std_logic_vector(15 downto 0) := x"caba";
-constant d4: std_logic_vector(15 downto 0) := x"ea11";
-constant d5: std_logic_vector(15 downto 0) := x"0000";
-constant d6: std_logic_vector(15 downto 0) := x"1111";
-constant d7: std_logic_vector(15 downto 0) := x"cccc";
-constant d8: std_logic_vector(15 downto 0) := x"caba";
-constant d9: std_logic_vector(15 downto 0) := x"ea11";
-constant da: std_logic_vector(15 downto 0) := x"0000";
-constant db: std_logic_vector(15 downto 0) := x"1111";
-constant dc: std_logic_vector(15 downto 0) := x"ccac";
-constant dd: std_logic_vector(15 downto 0) := x"caba";
-constant de: std_logic_vector(15 downto 0) := x"ea11";
-constant df: std_logic_vector(15 downto 0) := x"0110";
-constant d10: std_logic_vector(15 downto 0) := x"1111";
-constant d11: std_logic_vector(15 downto 0) := x"cccc";
-constant d12: std_logic_vector(15 downto 0) := x"caba";
-constant d13: std_logic_vector(15 downto 0) := x"ea11";
-constant d14: std_logic_vector(15 downto 0) := x"0000";
-constant d15: std_logic_vector(15 downto 0) := x"1111";
-constant d16: std_logic_vector(15 downto 0) := x"ccce";
-constant d17: std_logic_vector(15 downto 0) := x"caba";
-constant d18: std_logic_vector(15 downto 0) := x"ea11";
-constant d19: std_logic_vector(15 downto 0) := x"0000";
-constant d1a: std_logic_vector(15 downto 0) := x"0000";
-constant d1b: std_logic_vector(15 downto 0) := x"0000";
-constant d1c: std_logic_vector(15 downto 0) := x"0000";
-constant d1d: std_logic_vector(15 downto 0) := x"0000";
-constant d1e: std_logic_vector(15 downto 0) := x"0000";
-constant d1f: std_logic_vector(15 downto 0) := x"0000";
-constant d20: std_logic_vector(15 downto 0) := x"0000";
-constant d21: std_logic_vector(15 downto 0) := x"0000";
-constant d22: std_logic_vector(15 downto 0) := x"0000";
-constant d23: std_logic_vector(15 downto 0) := x"0000";
-constant d24: std_logic_vector(15 downto 0) := x"0000";
-constant d25: std_logic_vector(15 downto 0) := x"0000";
-constant d26: std_logic_vector(15 downto 0) := x"0000";
-constant d27: std_logic_vector(15 downto 0) := x"0000";
-constant d28: std_logic_vector(15 downto 0) := x"0000";
-constant d29: std_logic_vector(15 downto 0) := x"0000";
-constant d2a: std_logic_vector(15 downto 0) := x"0000";
-constant d2b: std_logic_vector(15 downto 0) := x"0000";
-constant d2c: std_logic_vector(15 downto 0) := x"0000";
-constant d2d: std_logic_vector(15 downto 0) := x"0000";
-constant d2e: std_logic_vector(15 downto 0) := x"0000";
-constant d2f: std_logic_vector(15 downto 0) := x"0000";
-constant d30: std_logic_vector(15 downto 0) := x"0000";
-constant d31: std_logic_vector(15 downto 0) := x"0000";
-constant d32: std_logic_vector(15 downto 0) := x"0000";
-constant d33: std_logic_vector(15 downto 0) := x"0000";
-constant d34: std_logic_vector(15 downto 0) := x"0000";
-constant d35: std_logic_vector(15 downto 0) := x"0000";
-constant d36: std_logic_vector(15 downto 0) := x"0000";
-constant d37: std_logic_vector(15 downto 0) := x"0000";
-constant d38: std_logic_vector(15 downto 0) := x"0000";
-constant d39: std_logic_vector(15 downto 0) := x"0000";
-constant d3a: std_logic_vector(15 downto 0) := x"0000";
-constant d3b: std_logic_vector(15 downto 0) := x"0000";
-constant d3c: std_logic_vector(15 downto 0) := x"0000";
-constant d3d: std_logic_vector(15 downto 0) := x"0000";
-constant d3e: std_logic_vector(15 downto 0) := x"0000";
-constant d3f: std_logic_vector(15 downto 0) := x"0000";
-constant d40: std_logic_vector(15 downto 0) := x"0000";
-constant d41: std_logic_vector(15 downto 0) := x"0000";
-constant d42: std_logic_vector(15 downto 0) := x"0000";
-constant d43: std_logic_vector(15 downto 0) := x"0000";
-constant d44: std_logic_vector(15 downto 0) := x"0000";
-constant d45: std_logic_vector(15 downto 0) := x"0000";
-constant d46: std_logic_vector(15 downto 0) := x"0000";
-constant d47: std_logic_vector(15 downto 0) := x"0000";
-constant d48: std_logic_vector(15 downto 0) := x"0000";
-constant d49: std_logic_vector(15 downto 0) := x"0000";
-constant d4a: std_logic_vector(15 downto 0) := x"0000";
-constant d4b: std_logic_vector(15 downto 0) := x"0000";
-constant d4c: std_logic_vector(15 downto 0) := x"0000";
-constant d4d: std_logic_vector(15 downto 0) := x"0000";
-constant d4e: std_logic_vector(15 downto 0) := x"0000";
-constant d4f: std_logic_vector(15 downto 0) := x"0000";
-constant d50: std_logic_vector(15 downto 0) := x"0000";
-constant d51: std_logic_vector(15 downto 0) := x"0000";
-constant d52: std_logic_vector(15 downto 0) := x"0000";
-constant d53: std_logic_vector(15 downto 0) := x"0000";
-constant d54: std_logic_vector(15 downto 0) := x"0000";
-constant d55: std_logic_vector(15 downto 0) := x"0000";
-constant d56: std_logic_vector(15 downto 0) := x"0000";
-constant d57: std_logic_vector(15 downto 0) := x"0000";
-constant d58: std_logic_vector(15 downto 0) := x"0000";
-constant d59: std_logic_vector(15 downto 0) := x"0000";
-constant d5a: std_logic_vector(15 downto 0) := x"0000";
-constant d5b: std_logic_vector(15 downto 0) := x"0000";
-constant d5c: std_logic_vector(15 downto 0) := x"0000";
-constant d5d: std_logic_vector(15 downto 0) := x"0000";
-constant d5e: std_logic_vector(15 downto 0) := x"0000";
-constant d5f: std_logic_vector(15 downto 0) := x"0000";
-constant d60: std_logic_vector(15 downto 0) := x"0000";
-constant d61: std_logic_vector(15 downto 0) := x"0000";
-constant d62: std_logic_vector(15 downto 0) := x"0000";
-constant d63: std_logic_vector(15 downto 0) := x"0000";
-constant d64: std_logic_vector(15 downto 0) := x"0000";
-constant d65: std_logic_vector(15 downto 0) := x"0000";
-constant d66: std_logic_vector(15 downto 0) := x"0000";
-constant d67: std_logic_vector(15 downto 0) := x"0000";
-constant d68: std_logic_vector(15 downto 0) := x"0000";
-constant d69: std_logic_vector(15 downto 0) := x"0000";
-constant d6a: std_logic_vector(15 downto 0) := x"0000";
-constant d6b: std_logic_vector(15 downto 0) := x"0000";
-constant d6c: std_logic_vector(15 downto 0) := x"0000";
-constant d6d: std_logic_vector(15 downto 0) := x"0000";
-constant d6e: std_logic_vector(15 downto 0) := x"0000";
-constant d6f: std_logic_vector(15 downto 0) := x"0000";
-constant d70: std_logic_vector(15 downto 0) := x"0000";
-constant d71: std_logic_vector(15 downto 0) := x"0000";
-constant d72: std_logic_vector(15 downto 0) := x"0000";
-constant d73: std_logic_vector(15 downto 0) := x"0000";
-constant d74: std_logic_vector(15 downto 0) := x"0000";
-constant d75: std_logic_vector(15 downto 0) := x"0000";
-constant d76: std_logic_vector(15 downto 0) := x"0000";
-constant d77: std_logic_vector(15 downto 0) := x"0000";
-constant d78: std_logic_vector(15 downto 0) := x"0000";
-constant d79: std_logic_vector(15 downto 0) := x"0000";
-constant d7a: std_logic_vector(15 downto 0) := x"0000";
-constant d7b: std_logic_vector(15 downto 0) := x"0000";
-constant d7c: std_logic_vector(15 downto 0) := x"0000";
-constant d7d: std_logic_vector(15 downto 0) := x"0000";
-constant d7e: std_logic_vector(15 downto 0) := x"0000";
-constant d7f: std_logic_vector(15 downto 0) := x"0000";
-constant d80: std_logic_vector(15 downto 0) := x"0000";
-constant d81: std_logic_vector(15 downto 0) := x"0000";
-constant d82: std_logic_vector(15 downto 0) := x"0000";
-constant d83: std_logic_vector(15 downto 0) := x"0000";
-constant d84: std_logic_vector(15 downto 0) := x"0000";
-constant d85: std_logic_vector(15 downto 0) := x"0000";
-constant d86: std_logic_vector(15 downto 0) := x"0000";
-constant d87: std_logic_vector(15 downto 0) := x"0000";
-constant d88: std_logic_vector(15 downto 0) := x"0000";
-constant d89: std_logic_vector(15 downto 0) := x"0000";
-constant d8a: std_logic_vector(15 downto 0) := x"0000";
-constant d8b: std_logic_vector(15 downto 0) := x"0000";
-constant d8c: std_logic_vector(15 downto 0) := x"0000";
-constant d8d: std_logic_vector(15 downto 0) := x"0000";
-constant d8e: std_logic_vector(15 downto 0) := x"0000";
-constant d8f: std_logic_vector(15 downto 0) := x"0000";
-constant d90: std_logic_vector(15 downto 0) := x"0000";
-constant d91: std_logic_vector(15 downto 0) := x"0000";
-constant d92: std_logic_vector(15 downto 0) := x"0000";
-constant d93: std_logic_vector(15 downto 0) := x"0000";
-constant d94: std_logic_vector(15 downto 0) := x"0000";
-constant d95: std_logic_vector(15 downto 0) := x"0000";
-constant d96: std_logic_vector(15 downto 0) := x"0000";
-constant d97: std_logic_vector(15 downto 0) := x"0000";
-constant d98: std_logic_vector(15 downto 0) := x"0000";
-constant d99: std_logic_vector(15 downto 0) := x"0000";
-constant d9a: std_logic_vector(15 downto 0) := x"0000";
-constant d9b: std_logic_vector(15 downto 0) := x"0000";
-constant d9c: std_logic_vector(15 downto 0) := x"0000";
-constant d9d: std_logic_vector(15 downto 0) := x"0000";
-constant d9e: std_logic_vector(15 downto 0) := x"0000";
-constant d9f: std_logic_vector(15 downto 0) := x"0000";
-constant da0: std_logic_vector(15 downto 0) := x"0000";
-constant da1: std_logic_vector(15 downto 0) := x"0000";
-constant da2: std_logic_vector(15 downto 0) := x"0000";
-constant da3: std_logic_vector(15 downto 0) := x"0000";
-constant da4: std_logic_vector(15 downto 0) := x"0000";
-constant da5: std_logic_vector(15 downto 0) := x"0000";
-constant da6: std_logic_vector(15 downto 0) := x"0000";
-constant da7: std_logic_vector(15 downto 0) := x"0000";
-constant da8: std_logic_vector(15 downto 0) := x"0000";
-constant da9: std_logic_vector(15 downto 0) := x"0000";
-constant daa: std_logic_vector(15 downto 0) := x"0000";
-constant dab: std_logic_vector(15 downto 0) := x"0000";
-constant dac: std_logic_vector(15 downto 0) := x"0000";
-constant dad: std_logic_vector(15 downto 0) := x"0000";
-constant dae: std_logic_vector(15 downto 0) := x"0000";
-constant daf: std_logic_vector(15 downto 0) := x"0000";
-constant db0: std_logic_vector(15 downto 0) := x"0000";
-constant db1: std_logic_vector(15 downto 0) := x"0000";
-constant db2: std_logic_vector(15 downto 0) := x"0000";
-constant db3: std_logic_vector(15 downto 0) := x"0000";
-constant db4: std_logic_vector(15 downto 0) := x"0000";
-constant db5: std_logic_vector(15 downto 0) := x"0000";
-constant db6: std_logic_vector(15 downto 0) := x"0000";
-constant db7: std_logic_vector(15 downto 0) := x"0000";
-constant db8: std_logic_vector(15 downto 0) := x"0000";
-constant db9: std_logic_vector(15 downto 0) := x"0000";
-constant dba: std_logic_vector(15 downto 0) := x"0000";
-constant dbb: std_logic_vector(15 downto 0) := x"0000";
-constant dbc: std_logic_vector(15 downto 0) := x"0000";
-constant dbd: std_logic_vector(15 downto 0) := x"0000";
-constant dbe: std_logic_vector(15 downto 0) := x"0000";
-constant dbf: std_logic_vector(15 downto 0) := x"0000";
-constant dc0: std_logic_vector(15 downto 0) := x"0000";
-constant dc1: std_logic_vector(15 downto 0) := x"0000";
-constant dc2: std_logic_vector(15 downto 0) := x"0000";
-constant dc3: std_logic_vector(15 downto 0) := x"0000";
-constant dc4: std_logic_vector(15 downto 0) := x"0000";
-constant dc5: std_logic_vector(15 downto 0) := x"0000";
-constant dc6: std_logic_vector(15 downto 0) := x"0000";
-constant dc7: std_logic_vector(15 downto 0) := x"0000";
-constant dc8: std_logic_vector(15 downto 0) := x"0000";
-constant dc9: std_logic_vector(15 downto 0) := x"0000";
-constant dca: std_logic_vector(15 downto 0) := x"0000";
-constant dcb: std_logic_vector(15 downto 0) := x"0000";
-constant dcc: std_logic_vector(15 downto 0) := x"0000";
-constant dcd: std_logic_vector(15 downto 0) := x"0000";
-constant dce: std_logic_vector(15 downto 0) := x"0000";
-constant dcf: std_logic_vector(15 downto 0) := x"0000";
-constant dd0: std_logic_vector(15 downto 0) := x"0000";
-constant dd1: std_logic_vector(15 downto 0) := x"0000";
-constant dd2: std_logic_vector(15 downto 0) := x"0000";
-constant dd3: std_logic_vector(15 downto 0) := x"0000";
-constant dd4: std_logic_vector(15 downto 0) := x"0000";
-constant dd5: std_logic_vector(15 downto 0) := x"0000";
-constant dd6: std_logic_vector(15 downto 0) := x"0000";
-constant dd7: std_logic_vector(15 downto 0) := x"0000";
-constant dd8: std_logic_vector(15 downto 0) := x"0000";
-constant dd9: std_logic_vector(15 downto 0) := x"0000";
-constant dda: std_logic_vector(15 downto 0) := x"0000";
-constant ddb: std_logic_vector(15 downto 0) := x"0000";
-constant ddc: std_logic_vector(15 downto 0) := x"0000";
-constant ddd: std_logic_vector(15 downto 0) := x"0000";
-constant dde: std_logic_vector(15 downto 0) := x"0000";
-constant ddf: std_logic_vector(15 downto 0) := x"0000";
-constant de0: std_logic_vector(15 downto 0) := x"0000";
-constant de1: std_logic_vector(15 downto 0) := x"0000";
-constant de2: std_logic_vector(15 downto 0) := x"0000";
-constant de3: std_logic_vector(15 downto 0) := x"0000";
-constant de4: std_logic_vector(15 downto 0) := x"0000";
-constant de5: std_logic_vector(15 downto 0) := x"0000";
-constant de6: std_logic_vector(15 downto 0) := x"0000";
-constant de7: std_logic_vector(15 downto 0) := x"0000";
-constant de8: std_logic_vector(15 downto 0) := x"0000";
-constant de9: std_logic_vector(15 downto 0) := x"0000";
-constant dea: std_logic_vector(15 downto 0) := x"0000";
-constant deb: std_logic_vector(15 downto 0) := x"0000";
-constant dec: std_logic_vector(15 downto 0) := x"0000";
-constant ded: std_logic_vector(15 downto 0) := x"0000";
-constant dee: std_logic_vector(15 downto 0) := x"0000";
-constant def: std_logic_vector(15 downto 0) := x"0000";
-constant df0: std_logic_vector(15 downto 0) := x"0000";
-constant df1: std_logic_vector(15 downto 0) := x"0000";
-constant df2: std_logic_vector(15 downto 0) := x"0000";
-constant df3: std_logic_vector(15 downto 0) := x"0000";
-constant df4: std_logic_vector(15 downto 0) := x"0000";
-constant df5: std_logic_vector(15 downto 0) := x"0000";
-constant df6: std_logic_vector(15 downto 0) := x"0000";
-constant df7: std_logic_vector(15 downto 0) := x"0000";
-constant df8: std_logic_vector(15 downto 0) := x"0000";
-constant df9: std_logic_vector(15 downto 0) := x"0000";
-constant dfa: std_logic_vector(15 downto 0) := x"0000";
-constant dfb: std_logic_vector(15 downto 0) := x"0000";
-constant dfc: std_logic_vector(15 downto 0) := x"0000";
-constant dfd: std_logic_vector(15 downto 0) := x"0000";
-constant dfe: std_logic_vector(15 downto 0) := x"0000";
-constant dff: std_logic_vector(15 downto 0) := x"0000";
-
-type rom_array is array (natural range <>) of
-    std_logic_vector(15 downto 0);
-
-constant romBuf: rom_array := (d0,d1,d2,d3,d4,d5,d6,d7,d8,d9,da,db,dc,dd,de,df,d10,d11,d12,d13,d14,d15,d16,d17,d18,d19,d1a,d1b,d1c,d1d,d1e,d1f,d20,d21,d22,d23,d24,d25,d26,d27,d28,d29,d2a,d2b,d2c,d2d,d2e,d2f,d30,d31,d32,d33,d34,d35,d36,d37,d38,d39,d3a,d3b,d3c,d3d,d3e,d3f,d40,d41,d42,d43,d44,d45,d46,d47,d48,d49,d4a,d4b,d4c,d4d,d4e,d4f,d50,d51,d52,d53,d54,d55,d56,d57,d58,d59,d5a,d5b,d5c,d5d,d5e,d5f,d60,d61,d62,d63,d64,d65,d66,d67,d68,d69,d6a,d6b,d6c,d6d,d6e,d6f,d70,d71,d72,d73,d74,d75,d76,d77,d78,d79,d7a,d7b,d7c,d7d,d7e,d7f,d80,d81,d82,d83,d84,d85,d86,d87,d88,d89,d8a,d8b,d8c,d8d,d8e,d8f,d90,d91,d92,d93,d94,d95,d96,d97,d98,d99,d9a,d9b,d9c,d9d,d9e,d9f,da0,da1,da2,da3,da4,da5,da6,da7,da8,da9,daa,dab,dac,dad,dae,daf,db0,db1,db2,db3,db4,db5,db6,db7,db8,db9,dba,dbb,dbc,dbd,dbe,dbf,dc0,dc1,dc2,dc3,dc4,dc5,dc6,dc7,dc8,dc9,dca,dcb,dcc,dcd,dce,dcf,dd0,dd1,dd2,dd3,dd4,dd5,dd6,dd7,dd8,dd9,dda,ddb,ddc,ddd,dde,ddf,de0,de1,de2,de3,de4,de5,de6,de7,de8,de9,dea,deb,dec,ded,dee,def,df0,df1,df2,df3,df4,df5,df6,df7,df8,df9,dfa,dfb,dfc,dfd,dfe,dff);
 begin
-    dataout <= romBuf(to_integer(unsigned(address)));
+    with address select data_out <=
+        x"C238" when x"0000",
+        x"EF89" when x"0002",
+        x"FA37" when x"0004",
+        x"0064" when x"0006",
+        x"008B" when x"0008",
+        x"6392" when x"000A",
+        x"8CD6" when x"0028",
+        x"C516" when x"002A",
+        x"ABF1" when x"002C",
+        x"2494" when x"002E",
+        x"FB0D" when x"0030",
+        x"DA3A" when x"0032",
+        x"7FBB" when x"0034",
+        x"7440" when x"4000",
+        x"B7D5" when x"4002",
+        x"5DED" when x"4074",
+        x"05D4" when x"4076",
+        x"16EB" when x"4082",
+        x"0000" when others;
 end architecture structural;
-
