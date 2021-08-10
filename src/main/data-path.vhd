@@ -277,11 +277,16 @@ begin
     -- # Components
     -- Program Counter
     pc: register_n_bit generic map(n) port map(
-        pc_in, clk, pc_out, rst, '1'
+        pc_in,
+        clk,
+        pc_out,
+        rst,
+        we_pc
     );
 
     instruction_memory: rom port map(
-        pc_out(7 downto 0), inst
+        inst_addr,
+        inst
     );
 
     -- Controller inputs
