@@ -151,7 +151,10 @@ architecture structural of data_path is
     end component;
     -- component register_file_3
     component register_file_3 is
-        generic(addr_size: natural);
+        generic(
+            constant addr_size: natural;
+            constant n: natural
+        );
         port(
             -- input
             clk, rst, we: in std_logic;
@@ -159,24 +162,27 @@ architecture structural of data_path is
             r1: in std_logic_vector(addr_size-1 downto 0);
             r2: in std_logic_vector(addr_size-1 downto 0);
             wr: in std_logic_vector(addr_size-1 downto 0);
-            wd: in std_logic_vector((2**addr_size)-1 downto 0);
+            wd: in std_logic_vector(n-1 downto 0);
             -- output
-            out0: out std_logic_vector((2**addr_size)-1 downto 0);
-            out1: out std_logic_vector((2**addr_size)-1 downto 0);
-            out2: out std_logic_vector((2**addr_size)-1 downto 0)
+            out0: out std_logic_vector(n-1 downto 0);
+            out1: out std_logic_vector(n-1 downto 0);
+            out2: out std_logic_vector(n-1 downto 0)
         );
     end component;
     -- component | register_file_1
     component register_file_1 is
-        generic(addr_size: natural);
+        generic(
+            constant addr_size: natural;
+            constant n: natural
+        );
         port(
             -- input
             clk, rst, we: in std_logic;
             r0: in std_logic_vector(addr_size-1 downto 0);
             wr: in std_logic_vector(addr_size-1 downto 0);
-            wd: in std_logic_vector((2**addr_size)-1 downto 0);
+            wd: in std_logic_vector(n-1 downto 0);
             -- output
-            out0: out std_logic_vector((2**addr_size)-1 downto 0)
+            out0: out std_logic_vector(n-1 downto 0)
         );
     end component;
 
@@ -357,7 +363,7 @@ begin
         inst
     );
 
-    mrf: register_file_3 generic map(3) port map(
+    mrf: register_file_3 generic map(3, n) port map(
         clk,
         rst,
         we_mrf,
@@ -371,7 +377,7 @@ begin
         mrf_out_3
     );
 
-    bank: register_file_1 generic map(2) port map(
+    bank: register_file_1 generic map(2, n) port map(
         clk,
         rst,
         we_bank,
