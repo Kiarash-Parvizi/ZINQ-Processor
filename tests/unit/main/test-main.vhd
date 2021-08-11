@@ -162,6 +162,6 @@ begin
         alu_borrow
     );
 
-    rst <= '1',
+    rst <= '0',
         '0' after 11 ns;
 end architecture;

@@ -738,7 +738,7 @@ begin
     lshift_ltor_in <= mem_data_out;
     lshift_ltor_amount <= pow_base_4_ltor_out;
 
-    lshift_luis_in <= se_ltor_out;
+    lshift_luis_in <= se_luis_out;
     lshift_luis_amount <= i_type_shamt;
 
     lshift_jalv_in <= ze_jalv_out;
