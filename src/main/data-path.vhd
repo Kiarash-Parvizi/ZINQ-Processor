@@ -686,8 +686,8 @@ begin
     mux_mrf_wd_in_3 <= lshift_subs_out;
     mux_mrf_wd_in_4 <= mux_rd_beon_out;
 
-    mux_rd_cmpi_in_0 <= x"FFFF";
-    mux_rd_cmpi_in_1 <= x"0000";
+    mux_rd_cmpi_in_0 <= x"0000";
+    mux_rd_cmpi_in_1 <= x"FFFF";
 
     -- TODO: Create a not c-omponent
     mux_rd_beon_in_0 <= not mrf_out_1;
