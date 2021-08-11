@@ -2,3 +2,6 @@
 	path = scripts/parvaj
 	url = https://github.com/machitgarha/parvaj
 	branch = develop
+[submodule "scripts/vhdl-mux-generator"]
+	path = scripts/vhdl-mux-generator
+	url = https://github.com/Kiarash-Parvizi/vhdl-mux-generator
