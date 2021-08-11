@@ -96,7 +96,7 @@ begin
     ------------------------
     ------------------------
     -- we
-    we_mrf  <= notRst and ((not a) or O_1d0);
+    we_mrf  <= notRst and ((not a and (b or c)) or O_1d0);
     we_bank <= notRst and O_1d1;
     we_mem  <= notRst and O_000;
     -- sel_pc
