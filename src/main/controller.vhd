@@ -91,6 +91,8 @@ begin
     O_111_F_d1 <= O_111 and F2;
     O_1d1_F_1d <= O_1d1 and F1;
     O_1d1_F_d1 <= O_1d1 and F2;
+
+    notRst <= not rst;
     -- custom
     ------------------------
     ------------------------
