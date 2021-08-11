@@ -27,3 +27,12 @@ tests/unit/*/*.vcd
 
 # ghdl cf
 *.cf
+
+# vscode
+.vscode/
+.metals
+
+# others
+*.vcd
+build.py
+*_ls.dat
