@@ -1,5 +1,4 @@
-[submodule "scripts"]
-	path = scripts
+[submodule "scripts/parvaj"]
+	path = scripts/parvaj
 	url = https://github.com/machitgarha/parvaj
-[submodule "scripts/"]
 	branch = develop
