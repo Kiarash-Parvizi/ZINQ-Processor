@@ -110,7 +110,7 @@ architecture structural of test_main is
     signal alu_zero: std_logic;
     signal alu_borrow: std_logic;
 begin
-    clock_generator_instance: clock_generator generic map(20) port map(clk);
+    clock_generator_instance: clock_generator generic map(100) port map(clk);
 
     controller_instance: controller port map(
         clk,

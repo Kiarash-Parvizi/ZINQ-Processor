@@ -28,7 +28,7 @@ begin
                 report "ram.addr<0x0000, 0xFFFF, 0x3FFF> = <" &
                     to_string(ramBuf(16#0000#)) & ", " &
                     to_string(ramBuf(16#ffff#)) & ", " &
-                    to_string(ramBuf(16#3fff#)) & ", " &
+                    to_string(ramBuf(16#bfff#)) & ", " &
                 ">\n";
             end if;
             if we = '1' then
@@ -36,6 +36,6 @@ begin
             end if;
         end if;
     end process RamProc;
-    
+
     dataout <= ramBuf(to_integer(unsigned(address)));
 end architecture structural;

@@ -24,10 +24,6 @@ begin
         x"FB0D" when x"0030",
         x"DA3A" when x"0032",
         x"7FBB" when x"0034",
-        x"7440" when x"4000",
-        x"B7D5" when x"4002",
-        x"5DED" when x"4074",
-        x"05D4" when x"4076",
-        x"16EB" when x"4082",
+        x"5DED" when x"0474",
         x"0000" when others;
 end architecture structural;
