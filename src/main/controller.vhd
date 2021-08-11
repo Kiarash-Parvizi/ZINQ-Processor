@@ -38,7 +38,7 @@ architecture structural of controller is
     signal F1: std_logic;
     signal F2: std_logic;
     -- flip-flop
-    signal reset_state: std_logic := '1';
+    signal reset_state: std_logic := '0';
     -- table
     -- opc based
     signal notRst : std_logic;
@@ -92,7 +92,6 @@ begin
     O_1d1_F_1d <= O_1d1 and F1;
     O_1d1_F_d1 <= O_1d1 and F2;
 
-    notRst <= not rst;
     -- custom
     ------------------------
     ------------------------
