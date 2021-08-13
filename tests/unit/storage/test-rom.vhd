@@ -8,12 +8,12 @@ end entity;
 architecture structural of test_rom is
     component rom is
         port(
-            address: in  std_logic_vector(7 downto 0);
-            dataout: out std_logic_vector(15 downto 0)
+            address: in  std_logic_vector(15 downto 0);
+            data_out: out std_logic_vector(15 downto 0)
         );
     end component;
     --
-    signal addr: std_logic_vector(7 downto 0);
+    signal addr: std_logic_vector(15 downto 0);
     signal data: std_logic_vector(15 downto 0);
 begin
     rom_inst: rom port map(addr, data);
