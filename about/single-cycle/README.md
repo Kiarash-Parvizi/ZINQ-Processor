@@ -10,4 +10,7 @@ A controller, in a computing context, is a hardware device or a software program
 we_<\*> == false if RST <br/>
 RST = !ExeState + rst
 <br/>
+![single-flip-flop](single-flip-flop.jpg)
+<br/>
+<br/>
 ![exe_state_calc](exe_state_calc.jpg)
