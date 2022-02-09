@@ -146,7 +146,13 @@ Q | 110 | - | `beon Rd, Rs, Rt, Shamt` | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[1
 
 ### Controller
 
+The controller is an FSM (Final State Machine).
+
 ![controller](about/single-cycle/controller.jpg)
+
+### Other Resources
+
+If you want to know how the connection signals between datapath and controller are implemented and optimized, see [this image](./about/single-cycle/exe-state-calc).
 
 ## License
 
