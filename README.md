@@ -24,7 +24,7 @@ Everything is ready. Deep dive into simulating the project:
 ./scripts/parvaj/bin/parvaj simulate test_main --waveform=vcd
 ```
 
-**Note:** This could take a while (2-3 minutes on my personal system).
+**Note:** This could take a while (about 2 minutes on my personal system).
 
 Boom! You can now see a simulation of the processor. Dig into the source code and learn more!
 
