@@ -21,7 +21,7 @@ composer install -d scripts/parvaj/
 Everything is ready. Deep dive into simulating the project:
 
 ```
-./scripts/parvaj/bin/parvaj simulate test_main
+./scripts/parvaj/bin/parvaj simulate test_main --waveform=vcd --option='--stop-time=1ns'
 ```
 
 Boom! You can now see a simulation of the processor. Dig into the source code and learn more!
@@ -37,6 +37,8 @@ For instance, if you want to test the controller alone, run:
 ```
 
 **Note:** The process should work on all Linux distributions, and other Unix variants. Windows users might be able to simulate as well, however it's not guaranteed.
+
+**Note:** If the simulation process takes forever, you should either use `--stop-time=1ns` (prevent to run infinitely), or `--waveform=vcd`. In latter case, the reason is sometimes the default GHW waveform output format causes GHDL to hang.
 
 ## The Design
 
@@ -162,7 +164,7 @@ Feel free to contribute of any kind. By any kind, we mean just ANY kind! :)
 
 The code is well-documented, and this README should help you through the general overview of the project.
 
-But you think it is a must? Create an issue and tell why. 
+But you think it is a must? Create an issue and tell why.
 
 ## License
 

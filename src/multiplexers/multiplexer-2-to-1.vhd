@@ -17,7 +17,7 @@ use ieee.std_logic_1164.all;
 -- The convension for determining the inputs is, although using reverse indices as usual (i.e. using
 -- downto), the first n bits (i.e. MSBs) is for the input number 0, the second n bits for 1, and so
 -- on. For example, b"0011" supposing the inputs are 2-bit each, means that, if the selector is '0',
--- then the multiplexer will return b"00". 
+-- then the multiplexer will return b"00".
 
 entity multiplexer_2_to_1 is
     generic(
