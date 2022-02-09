@@ -48,7 +48,61 @@ Keep going for more details.
 
 ### Instructions Format
 
-![instruction-format](about/single-cycle/instruction-format.jpg)
+ZINQ processor has four types of instructions, Z-type, I-type, N-type and Q-type. Each type has a unique format.
+
+<table>
+    <tr>
+        <td></td>
+        <td>15</td>
+        <td>14</td>
+        <td>13</td>
+        <td>12</td>
+        <td>11</td>
+        <td>10</td>
+        <td>9</td>
+        <td>8</td>
+        <td>7</td>
+        <td>6</td>
+        <td>5</td>
+        <td>4</td>
+        <td>3</td>
+        <td>2</td>
+        <td>1</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>Z-Type</td>
+        <td colspan="3" align="center">Rd</td>
+        <td colspan="4" align="center">Imm</td>
+        <td colspan="3" align="center">OPC</td>
+        <td colspan="3" align="center">Rs</td>
+        <td colspan="3" align="center">Rt</td>
+    </tr>
+    <tr>
+        <td>I-Type</td>
+        <td colspan="7" align="center">Imm</td>
+        <td colspan="3" align="center">OPC</td>
+        <td colspan="3" align="center">Shamt</td>
+        <td colspan="3" align="center">Rd</td>
+    </tr>
+    <tr>
+        <td>N-Type</td>
+        <td colspan="5" align="center">Immh</td>
+        <td colspan="2" align="center">Addr</td>
+        <td colspan="3" align="center">OPC</td>
+        <td colspan="4" align="center">Imml</td>
+        <td colspan="2" align="center">Funct</td>
+    </tr>
+    <tr>
+        <td>Q-Type</td>
+        <td colspan="3" align="center">Rs</td>
+        <td colspan="1" align="center">q</td>
+        <td colspan="3" align="center">Rd</td>
+        <td colspan="3" align="center">OPC</td>
+        <td colspan="3" align="center">Rt</td>
+        <td colspan="3" align="center">Shamt</td>
+    </tr>
+</table>
 
 ### Instruction Set
 
