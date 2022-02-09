@@ -154,6 +154,16 @@ The controller is an FSM (Final State Machine).
 
 If you want to know how the connection signals between datapath and controller are implemented and optimized, see [this image](./about/single-cycle/exe-state-calc).
 
+## Contributions
+
+Feel free to contribute of any kind. By any kind, we mean just ANY kind! :)
+
+## Documentation
+
+The code is well-documented, and this README should help you through the general overview of the project.
+
+But you think it is a must? Create an issue and tell why. 
+
 ## License
 
 Licensed under [GPLv3](./LICENSE.md).
