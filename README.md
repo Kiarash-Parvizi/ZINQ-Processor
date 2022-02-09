@@ -147,3 +147,7 @@ Q | 110 | - | `beon Rd, Rs, Rt, Shamt` | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[1
 ### Controller
 
 ![controller](about/single-cycle/controller.jpg)
+
+## License
+
+Licensed under [GPLv3](./LICENSE.md).
