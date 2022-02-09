@@ -1,24 +1,42 @@
 # ZINQ Processor
-a simple single-cycle processor designed for educational purposes
 
-## run and test:
-### make sure you have [Parvaj](https://github.com/machitgarha/parvaj) currectly installed by running:
+A simple single-cycle processor designed for educational purposes, written in VHDL.
+
+## Running and Testing
+
+For the simulation process, the supported method is to use [Parvaj](https://github.com/machitgarha/parvaj) (which makes use of GHDL and GtkWave). You can also use well-known possibly-commercial tools (like Xilinx ISE), but you're completely on your own.
+
+First, clone the project with all its dependencies:
+
 ```
-git submodule update --init --recursive
-cd scripts
-composer install
+git clone https://github.com/Kiarash-Parvizi/ZINQ-Processor --recursive
 ```
-### Requirements
+
+Now, you need to initialize Parvaj. Install the requirements specified [here](https://github.com/machitgarha/parvaj#requirements), and then do the following:
+
 ```
-- PHP 7.4+
-- Composer
-- GHDL
-- GtkWave
+composer install -d scripts/parvaj/
 ```
-### run unit-test
+
+Everything is ready. Deep dive into simulating the project:
+
 ```
-scripts/start-unit-test.php <test-entity-name> [<workdir>] [<simulation-options>]
+./scripts/parvaj/bin/parvaj simulate test_main
 ```
+
+Boom! You can now see a simulation of the processor. Dig into the source code and learn more!
+
+### Testing Other Entities
+
+Almost all entities are well-tested and for each, a unit-test (i.e. test-bench) is written. Feel free to simulate those tests as well.
+
+For instance, if you want to test the controller alone, run:
+
+```
+./scripts/parvaj/bin/parvaj simulate test_controller
+```
+
+**Note:** The process should work on all Linux distributions, and other Unix variants. Windows users might be able to simulate as well, however it's not guaranteed.
 
 ## instruction-set
 | type | OPC | funct | assembly-format | Operation |
@@ -40,4 +58,3 @@ Q | 110 | - | beon Rd, Rs, Rt, Shamt | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[15:
 
 ## controller:
 ![controller](about/single-cycle/controller.jpg)
-
