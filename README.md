@@ -44,11 +44,13 @@ Every processor has an [instruction set](https://en.wikipedia.org/wiki/Instructi
 
 In a simple realization, ZINQ processor divides into two separated but connected [datapath](https://en.wikipedia.org/wiki/Datapath) and [controller](https://whatis.techtarget.com/definition/controller) entities. They are first designed conceptually and visually, and then implemented in VHDL, making the design process simple.
 
+In the datapath, we have two register files named as Main and Bank. The main has 8 registers and the bank has 4.
+
 Keep going for more details.
 
 ### Instructions Format
 
-ZINQ processor has four types of instructions, Z-type, I-type, N-type and Q-type. Each type has a unique format.
+ZINQ processor has four types of instructions, Z-type, I-type, N-type and Q-type. Each type has a unique format shown in the table below.
 
 <table>
     <tr>
@@ -104,18 +106,30 @@ ZINQ processor has four types of instructions, Z-type, I-type, N-type and Q-type
     </tr>
 </table>
 
+#### Fields Explanations
+
+-   OPC and Funct: Operation of the instruction. Specifies which instruction is it, along with its type (e.g. Z-type) to extract other fields.
+
+-   R* and Addr: The number of a register, in which its value is used when referenced. The first one is for the main register file, the second is for the bank one.
+
+-   Imm*: A constant value. Stands for immediate.
+
+-   Shamt: Shift amount used in dynamic shift operations.
+
+For more details, see the Instruction Set section below.
+
 ### Instruction Set
 
 | Type | OPC | Funct | Assembly Format | Operation |
 | :--: | :-: | :---: | :-------------: | :------- |
-| Z | 000 | ‐ | stoi Rd, Rs, Rt, Imm | Mem[Rs + Rt] ← 16×U.S(Rd) + Z.E(Imm) |
-| Z | 001 | - | cmpi Rd, Rs, Rt, Imm | If (Rs == S.E(Imm))<br/>&nbsp;&nbsp;Rd ← 0x"FFFF"<br/>Else<br/>&nbsp;&nbsp;Rd ← 0x"0000"
-| I | 010 | ‐ | ltor Rd, Imm, Shamt  | Rd ← (Mem[S.E(Imm & “0000”)) << (4 ^ Shamt))
-| I | 011 | - | luis Rd, Imm, Shamt  | Rd ← (S.E(Imm) << Shamt )[15:8] & 0x"00"
-| N | 111 | 01 | bgti Imml, Immh, Addr | If (S.E(Imml) < S.E(Immh))<br/>&nbsp;&nbsp;PC ← (PC[15:12] & Bank[Addr][11:0])<br/>&nbsp;&nbsp;Bank[3] ← (PC + 2)<br/>Else<br/>&nbsp;&nbsp;PC ← (PC + 2)<br/>&nbsp;&nbsp;Bank[Addr] ← (PC + 2) |
-| N | 111 | 10 | jalv Imml, Immh, Addr | PC ← (Z.E(Immh & Imml)<<1) + (PC + 2)<br/>Bank[Addr] ← (PC+2) |
-| Q | 100 | - | subs Rd, Rs, Rt, Shamt | If (q == 1)<br/>&nbsp;&nbsp;Rd ← (Rs ‐ Rt) << Shamt<br/>Else<br/>&nbsp;&nbsp;Rd ← (U.S(Rs) ‐ U.S(Rt)) << Shamt |
-Q | 110 | - | beon Rd, Rs, Rt, Shamt | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[15:8] & Rt[7:0]<br/>&nbsp;&nbsp;PC ← PC + ((Rs × 64) + (4 ^ Shamt))<br/>Else<br/>&nbsp;&nbsp;Rd ← NOT(Rs) <br/>&nbsp;&nbsp;PC ← (PC << Shamt) |
+| Z | 000 | ‐ | `stoi Rd, Rs, Rt, Imm` | Mem[Rs + Rt] ← 16×U.S(Rd) + Z.E(Imm) |
+| Z | 001 | - | `cmpi Rd, Rs, Rt, Imm` | If (Rs == S.E(Imm))<br/>&nbsp;&nbsp;Rd ← 0x"FFFF"<br/>Else<br/>&nbsp;&nbsp;Rd ← 0x"0000"
+| I | 010 | ‐ | `ltor Rd, Imm, Shamt` | Rd ← (Mem[S.E(Imm & “0000”)) << (4 ^ Shamt))
+| I | 011 | - | `luis Rd, Imm, Shamt` | Rd ← (S.E(Imm) << Shamt )[15:8] & 0x"00"
+| N | 111 | 01 | `bgti Imml, Immh, Addr` | If (S.E(Imml) < S.E(Immh))<br/>&nbsp;&nbsp;PC ← (PC[15:12] & Bank[Addr][11:0])<br/>&nbsp;&nbsp;Bank[3] ← (PC + 2)<br/>Else<br/>&nbsp;&nbsp;PC ← (PC + 2)<br/>&nbsp;&nbsp;Bank[Addr] ← (PC + 2) |
+| N | 111 | 10 | `jalv Imml, Immh, Addr` | PC ← (Z.E(Immh & Imml)<<1) + (PC + 2)<br/>Bank[Addr] ← (PC+2) |
+| Q | 100 | - | `subs Rd, Rs, Rt, Shamt` | If (q == 1)<br/>&nbsp;&nbsp;Rd ← (Rs ‐ Rt) << Shamt<br/>Else<br/>&nbsp;&nbsp;Rd ← (U.S(Rs) ‐ U.S(Rt)) << Shamt |
+Q | 110 | - | `beon Rd, Rs, Rt, Shamt` | If (q == 1)<br/>&nbsp;&nbsp;Rd ← Rs[15:8] & Rt[7:0]<br/>&nbsp;&nbsp;PC ← PC + ((Rs × 64) + (4 ^ Shamt))<br/>Else<br/>&nbsp;&nbsp;Rd ← NOT(Rs) <br/>&nbsp;&nbsp;PC ← (PC << Shamt) |
 
 ### Datapath
 
